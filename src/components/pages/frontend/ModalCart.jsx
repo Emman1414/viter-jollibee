@@ -138,9 +138,9 @@ const ModalCart = ({ setShowCart, cartData, setCartData, getTotal }) => {
             )}
           </div>
         ) : option === "dining" ? (
-          <Dining />
+          <Dining setOption={setOption} handleProcessing={handleProcessing} />
         ) : option === "payment" ? (
-          <Payment />
+          <Payment setOption={setOption} handleProcessing={handleProcessing} />
         ) : (
           <Processing />
         )}
