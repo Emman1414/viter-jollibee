@@ -20,7 +20,7 @@ import Dining from "./Dining";
 const ModalCart = ({ setShowCart, cartData, setCartData, getTotal }) => {
   const [option, setOption] = React.useState("cart");
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleAdd = (item) => {
     const exist = cartData.find((data) => data.menu_aid === item.menu_aid);
@@ -51,8 +51,6 @@ const ModalCart = ({ setShowCart, cartData, setCartData, getTotal }) => {
       );
     }
   };
-
- 
 
   const handleProcessing = () => {
     setOption("");
@@ -139,7 +137,13 @@ const ModalCart = ({ setShowCart, cartData, setCartData, getTotal }) => {
               </div>
             )}
           </div>
-        ) : option === "dining" ? (<Dining/>) : option === "payment" ? (<Payment/>) : (<Processing/>)}
+        ) : option === "dining" ? (
+          <Dining />
+        ) : option === "payment" ? (
+          <Payment />
+        ) : (
+          <Processing />
+        )}
       </div>
     </>
   );
