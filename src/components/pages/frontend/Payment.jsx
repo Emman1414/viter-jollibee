@@ -2,17 +2,17 @@ import { imgPath } from "@/components/helpers/functions-general";
 import { ArrowLeft, CreditCard, PhilippinePeso, X } from "lucide-react";
 import React from "react";
 
-const Payment = ({ handleProcessing, setOption, setShowCart }) => {
+const Payment = ({ handleProcessing, setOption }) => {
   return (
     <>
       <div className="max-w-[600px] w-full bg-white rounded-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden">
         <div className="modal-header p-4 flex justify-between items-center border-b border-gray-200">
-          <button onClick={() => setOption("cart")}>
-            <ArrowLeft />
+          <button>
+            <ArrowLeft onClick={() => setOption("dining")} />
           </button>
           <h5 className="mb-0">Choose One</h5>
-          <button onClick={() => setShowCart(false)}>
-            <X />
+          <button>
+            <X onClick={() => setOption("dining")} />
           </button>
         </div>
 
