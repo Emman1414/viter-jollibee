@@ -29,13 +29,16 @@ const Dashboard = () => {
               <div className="grid grid-cols-[1fr_400px] gap-5">
                 <div className="stats">
                   <div className="grid grid-cols-4 gap-5">
-                    <DashboardCard title="Chicken joy" filterby="Chickenjoy" />
-                    <DashboardCard title="Value Meal" filterby="Valuemeal" />
-                    <DashboardCard title="Burger" filterby="Burger" />
+                    <DashboardCard title="Chickenjoy" filterby="Chickenjoy" />
+                    <DashboardCard title="Value Meal" filterby="Value Meal" />
+                    <DashboardCard title="Yum Burger" filterby="Yum Burger" />
+                    <DashboardCard
+                      title="Burger Steak"
+                      filterby="Burger Steak"
+                    />
                     <DashboardCard title="Spaghetti" filterby="Spaghetti" />
                     <DashboardCard title="Palabok" filterby="Palabok" />
                     <DashboardCard title="Sides" filterby="Sides" />
-                    <DashboardCard title="Desserts" filterby="Desserts" />
                     <DashboardCard title="Desserts" filterby="Desserts" />
                   </div>
 
@@ -66,17 +69,26 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div className="sidebar custom-scroll h-[calc(100vh-200px)] overflow-auto">
+                <div className="sidebar custom-scroll h-[calc(100vh-150px)] overflow-auto">
                   <DashboardAccordion
-                    title="Chicken joy"
+                    title="Chickenjoy"
                     filterby="Chickenjoy"
                   />
-                  <DashboardAccordion title="Value Meal" filterby="Valuemeal" />
-                  <DashboardAccordion title="Burger" filterby="Burger" />
+                  <DashboardAccordion
+                    title="Value Meal"
+                    filterby="Value Meal"
+                  />
+                  <DashboardAccordion
+                    title="Yum Burger"
+                    filterby="Yum Burger"
+                  />
+                  <DashboardAccordion
+                    title="Burger Steak"
+                    filterby="Burger Steak"
+                  />
                   <DashboardAccordion title="Spaghetti" filterby="Spaghetti" />
                   <DashboardAccordion title="Palabok" filterby="Palabok" />
                   <DashboardAccordion title="Sides" filterby="Sides" />
-                  <DashboardAccordion title="Desserts" filterby="Desserts" />
                   <DashboardAccordion title="Desserts" filterby="Desserts" />
                 </div>
               </div>

@@ -138,7 +138,7 @@ export const menus = [
     menu_category: "Value Meal",
     menu_price: "250",
     menu_image: "value-meal-3.webp",
-    menu_is_active: true,
+    menu_is_active: false,
   },
   {
     menu_aid: 18,
@@ -327,4 +327,3 @@ export const menus = [
     menu_is_active: true,
   },
 ];
-  
