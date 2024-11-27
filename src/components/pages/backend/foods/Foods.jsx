@@ -1,33 +1,30 @@
+import { setIsAdd } from "@/components/store/storeAction";
+import { StoreContext } from "@/components/store/storeContext";
 import { Plus } from "lucide-react";
 import React from "react";
+import Footer from "../partials/Footer";
 import Header from "../partials/Header";
 import SearchBar from "../partials/SearchBar";
-import Footer from "../partials/Footer";
 import SideNavigation from "../partials/SideNavigation";
-import AdvertisementTable from "./AdvertisementTable";
-import { StoreContext } from "@/components/store/storeContext";
-import { setIsAdd } from "@/components/store/storeAction";
-import ModalAddAdvertisement from "./ModalAddAdvertisement";
+import ModalAddFood from "./ModalAddFood";
+import FoodTable from "./FoodTable";
 import ModalError from "../partials/modals/ModalError";
-import ToastSuccess from "../partials/ToastSuccess";
-import ModalValidation from "../partials/modals/ModalValidation";
 
-const Advertisement = () => {
-    const { dispatch, store } = React.useContext(StoreContext);
+const Foods = () => {
+  const { dispatch, store } = React.useContext(StoreContext);
+  const [itemEdit, setItemEdit] = React.useState(null);
 
-    const handleAdd = () => {
-      dispatch(setIsAdd(true));
-    };
+  const handleAdd = () => {
+    dispatch(setIsAdd(true));
+    setItemEdit(null);
+  };
   return (
     <>
       <section className="layout-main">
         <div className="layout-division">
-          <SideNavigation menu="advertisement" />
+          <SideNavigation menu="foods" />
           <main>
-            <Header
-              title="Advertisement"
-              subtitle="Manage Kiosk Advertisement"
-            />
+            <Header title="Foods" subtitle="Manage Kiosk Foods" />
             <div className="p-8">
               <div className="flex justify-between items-center ">
                 <SearchBar />
@@ -37,7 +34,7 @@ const Advertisement = () => {
                   Add New
                 </button>
               </div>
-              <AdvertisementTable />
+              <FoodTable setItemEdit={setItemEdit} />
             </div>
             <Footer />
           </main>
@@ -47,11 +44,9 @@ const Advertisement = () => {
       {store.validate && <ModalValidation />}
       {store.error && <ModalError />}
       {store.success && <ToastSuccess />}
-      {/* <SpinnerWindow /> */}
-
-      {store.isAdd && <ModalAddAdvertisement />}
+      {store.isAdd && <ModalAddFood itemEdit={itemEdit} />}
     </>
   );
 };
 
-export default Advertisement;
+export default Foods;

@@ -3,16 +3,31 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Welcome from "./components/pages/frontend/Welcome";
 import Order from "./components/pages/frontend/Order";
 import Advertisement from "./components/pages/backend/advertisement/Advertisement";
+import { StoreProvider } from "./components/store/storeContext";
+import Foods from "./components/pages/backend/foods/Foods";
+import Category from "./components/pages/backend/category/Category";
+import Dashboard from "./components/pages/backend/dashboard/Dashboard";
+import Login from "./components/pages/backend/access/Login";
+import SetPassword from "./components/pages/backend/access/SetPassword";
+import ForgotPassword from "./components/pages/backend/access/ForgotPassword";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route index element={<Welcome />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/admin/advertisement" element={<Advertisement />} />
-      </Routes>
-    </Router>
+    <StoreProvider>
+      <Router>
+        <Routes>
+          <Route index element={<Welcome />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/admin/advertisement" element={<Advertisement />} />
+          <Route path="/admin/foods" element={<Foods />} />
+          <Route path="/admin/category" element={<Category />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/setpassword" element={<SetPassword />} />
+          <Route path="/admin/forgotpassword" element={<ForgotPassword />} />
+        </Routes>
+      </Router>
+    </StoreProvider>
   );
 };
 

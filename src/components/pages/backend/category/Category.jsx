@@ -1,33 +1,30 @@
+import { setIsAdd } from "@/components/store/storeAction";
+import { StoreContext } from "@/components/store/storeContext";
 import { Plus } from "lucide-react";
 import React from "react";
-import Header from "../partials/Header";
-import SearchBar from "../partials/SearchBar";
 import Footer from "../partials/Footer";
-import SideNavigation from "../partials/SideNavigation";
-import AdvertisementTable from "./AdvertisementTable";
-import { StoreContext } from "@/components/store/storeContext";
-import { setIsAdd } from "@/components/store/storeAction";
-import ModalAddAdvertisement from "./ModalAddAdvertisement";
+import Header from "../partials/Header";
 import ModalError from "../partials/modals/ModalError";
-import ToastSuccess from "../partials/ToastSuccess";
 import ModalValidation from "../partials/modals/ModalValidation";
+import SearchBar from "../partials/SearchBar";
+import SideNavigation from "../partials/SideNavigation";
+import ToastSuccess from "../partials/ToastSuccess";
+import CategoryTable from "./CategoryTable";
+import ModalAddCategory from "./ModalAddCategory";
 
-const Advertisement = () => {
-    const { dispatch, store } = React.useContext(StoreContext);
+const Category = () => {
+  const { dispatch, store } = React.useContext(StoreContext);
 
-    const handleAdd = () => {
-      dispatch(setIsAdd(true));
-    };
+  const handleAdd = () => {
+    dispatch(setIsAdd(true));
+  };
   return (
     <>
       <section className="layout-main">
         <div className="layout-division">
-          <SideNavigation menu="advertisement" />
+          <SideNavigation menu="category" />
           <main>
-            <Header
-              title="Advertisement"
-              subtitle="Manage Kiosk Advertisement"
-            />
+            <Header title="Category" subtitle="Manage Kiosk Category" />
             <div className="p-8">
               <div className="flex justify-between items-center ">
                 <SearchBar />
@@ -37,7 +34,7 @@ const Advertisement = () => {
                   Add New
                 </button>
               </div>
-              <AdvertisementTable />
+              <CategoryTable />
             </div>
             <Footer />
           </main>
@@ -49,9 +46,9 @@ const Advertisement = () => {
       {store.success && <ToastSuccess />}
       {/* <SpinnerWindow /> */}
 
-      {store.isAdd && <ModalAddAdvertisement />}
+      {store.isAdd && <ModalAddCategory />}
     </>
   );
 };
 
-export default Advertisement;
+export default Category;
