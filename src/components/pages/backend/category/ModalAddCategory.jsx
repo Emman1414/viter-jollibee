@@ -2,10 +2,10 @@ import useUploadPhoto from "@/components/custom-hook/useUploadPhoto";
 import { InputPhotoUpload, InputText } from "@/components/helpers/FormInputs";
 import { setIsAdd } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
+import * as Yup from "Yup";
 import { Form, Formik } from "formik";
 import { ImagePlusIcon, X } from "lucide-react";
 import React from "react";
-import * as Yup from "Yup";
 import ModalWrapper from "../partials/modals/ModalWrapper";
 import SpinnerButton from "../partials/spinners/SpinnerButton";
 
