@@ -1,6 +1,10 @@
-import useUploadPhoto from "@/components/custom-hook/useUploadPhoto";
 import { InputPhotoUpload, InputText } from "@/components/helpers/FormInputs";
-import { setIsAdd } from "@/components/store/storeAction";
+import {
+  setError,
+  setIsAdd,
+  setMessage,
+  setSuccess,
+} from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
 import * as Yup from "Yup";
 import { Form, Formik } from "formik";
@@ -8,17 +12,67 @@ import { ImagePlusIcon, X } from "lucide-react";
 import React from "react";
 import ModalWrapper from "../partials/modals/ModalWrapper";
 import SpinnerButton from "../partials/spinners/SpinnerButton";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryData } from "@/components/helpers/queryData";
+import useQueryData from "@/components/custom-hook/useQueryData";
+import useUploadPhoto from "@/components/custom-hook/useUploadPhoto";
+import { imgPath } from "@/components/helpers/functions-general";
 
-const ModalAddCategory = () => {
+const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
   const { dispatch } = React.useContext(StoreContext);
-  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
+  const [value, setValue] = React.useState("");
+  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto(" ");
+
+  const queryClient = useQueryClient();
 
   const handleClose = () => {
     dispatch(setIsAdd(false));
   };
 
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: results,
+  } = useQueryData(
+    `/v2/category`, // endpoint
+    "get", // method
+    "category" // key
+  );
+
+  const mutation = useMutation({
+    mutationFn: (values) =>
+      queryData(
+        isCategoryEdit
+          ? `/v2/category/${isCategoryEdit.category_aid}`
+          : "/v2/category",
+        isCategoryEdit ? "PUT" : "POST",
+        values
+      ),
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+
+      // show error box
+      if (!data.success) {
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
+        dispatch(setSuccess(false));
+      } else {
+        console.log("Success");
+        dispatch(setIsAdd(false));
+        dispatch(setSuccess(true));
+        dispatch(setMessage("Successful!"));
+      }
+    },
+  });
+
   const initVal = {
-    category_title: "",
+    category_title: isCategoryEdit ? isCategoryEdit.category_title : "",
   };
   const yupSchema = Yup.object({
     category_title: Yup.string().required("Required"),
@@ -39,7 +93,17 @@ const ModalAddCategory = () => {
             initialValues={initVal}
             validationSchema={yupSchema}
             onSubmit={async (values) => {
-              console.log(values);
+              mutation.mutate({
+                ...values,
+                category_image:
+                  (isCategoryEdit?.category_image === "" && photo) ||
+                  (!photo && "") ||
+                  (photo === undefined && "") ||
+                  (photo && isCategoryEdit?.category_image !== photo?.name)
+                    ? photo?.name || ""
+                    : isCategoryEdit?.category_image || "",
+              });
+              uploadPhoto();
             }}
           >
             {(props) => {
@@ -52,12 +116,13 @@ const ModalAddCategory = () => {
                           label="Title"
                           type="text"
                           name="category_title"
+                          onChange={handleChange}
                         />
                       </div>
 
                       <div className="input-wrap relative  group input-photo-wrap h-[150px] ">
                         <label htmlFor="">Photo</label>
-                        {photo === null ? (
+                        {isCategoryEdit === null && photo === null ? (
                           <div className="w-full border border-line rounded-md flex justify-center items-center flex-col h-full">
                             <ImagePlusIcon
                               size={50}
@@ -71,11 +136,11 @@ const ModalAddCategory = () => {
                         ) : (
                           <img
                             src={
-                              true
+                              photo
                                 ? URL.createObjectURL(photo) // preview
-                                : imgPath + "/" + itemEdit?.movies_image // check db
+                                : imgPath + "/" + isCategoryEdit?.category_image // check db
                             }
-                            alt="employee photo"
+                            alt="food photo"
                             className={`group-hover:opacity-30 duration-200 relative object-cover h-full w-full  m-auto `}
                           />
                         )}
@@ -87,13 +152,15 @@ const ModalAddCategory = () => {
                           title="Upload photo"
                           onChange={(e) => handleChangePhoto(e)}
                           onDrop={(e) => handleChangePhoto(e)}
-                          className={`opacity-0 absolute top-0 right-0 bottom-0 left-0 rounded-full  m-auto cursor-pointer w-full h-full`}
+                          className={`opacity-0 absolute top-0 right-0 bottom-0 left-0 rounded-full  m-auto cursor-pointer w-full h-full ${
+                            mutation.isPending ? "pointer-events-none" : ""
+                          }`}
                         />
                       </div>
                     </div>
                     <div className="form-action flex p-4 justify-end gap-3">
                       <button className="btn btn-add" type="submit">
-                        <SpinnerButton /> Save
+                        {mutation.isPending ? <SpinnerButton /> : "Add"}
                       </button>
                       <button
                         className="btn btn-cancel"

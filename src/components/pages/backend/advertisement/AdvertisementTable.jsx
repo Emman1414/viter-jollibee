@@ -11,7 +11,7 @@ import ModalConfirm from "../partials/modals/ModalConfirm";
 import ModalDelete from "../partials/modals/ModalDelete";
 import Pills from "../partials/Pills";
 
-const AdvertisementTable = () => {
+const   AdvertisementTable = () => {
   const { store, dispatch } = React.useContext(StoreContext);
 
   let counter = 1;

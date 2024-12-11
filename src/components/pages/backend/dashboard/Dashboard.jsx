@@ -1,13 +1,12 @@
 import {
-  BarChart,
   Bar,
-  Rectangle,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
-  ResponsiveContainer,
+  Rectangle,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
 import Footer from "../partials/Footer";
 import Header from "../partials/Header";

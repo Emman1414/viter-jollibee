@@ -32,7 +32,7 @@ const Advertisement = () => {
               <div className="flex justify-between items-center ">
                 <SearchBar />
 
-                <button className="btn btn-add" onClick={handleAdd}>
+                <button className="btn btn-add" >
                   <Plus size={16} />
                   Add New
                 </button>

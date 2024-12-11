@@ -1,36 +1,56 @@
+import Status from "@/components/partials/Status";
 import {
   setIsAdd,
-  setIsConfirm,
+  setIsArchive,
   setIsDelete,
+  setIsRestore,
 } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
 import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
 import React from "react";
 import LoadMore from "../partials/LoadMore";
-import ModalConfirm from "../partials/modals/ModalConfirm";
-import ModalDelete from "../partials/modals/ModalDelete";
-import Pills from "../partials/Pills";
+import ModalArchive from "../partials/modals/ModalArchive";
+import useQueryData from "@/components/custom-hook/useQueryData";
+import ModalRestore from "@/components/partials/modal/ModalRestore";
+import ModalDelete from "@/components/partials/modal/ModalDelete";
 
-const CategoryTable = () => {
+const CategoryTable = ({ setIsCategoryEdit }) => {
+  const [id, setIsId] = React.useState("");
   const { store, dispatch } = React.useContext(StoreContext);
 
   let counter = 1;
 
-  const handleEdit = () => {
+  const handleEdit = (item) => {
     dispatch(setIsAdd(true));
+    setIsCategoryEdit(item);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (item) => {
     dispatch(setIsDelete(true));
+    setIsId(item.category_aid);
   };
 
-  const handleRestore = () => {
-    dispatch(setIsConfirm(true));
+  const handleRestore = (item) => {
+    dispatch(setIsRestore(true));
+    setIsId(item.category_aid);
   };
 
-  const handleArchive = () => {
-    dispatch(setIsConfirm(true));
+  const handleArchive = (item) => {
+    dispatch(setIsArchive(true));
+    setIsId(item.category_aid);
   };
+
+  const {
+    isFetching,
+    error,
+    data: result,
+    status,
+  } = useQueryData(
+    `/v2/category`, // endpoint
+    "get", // method
+    "category" // key
+  );
+  
 
   return (
     <>
@@ -59,62 +79,62 @@ const CategoryTable = () => {
                 </td>
               </tr> */}
 
-              {Array.from(Array(5).keys()).map((i) => (
-                <tr key={i}>
-                  <td>{counter++}</td>
-                  <td>
-                    <Pills />
-                  </td>
-                  <td>Burger 1</td>
-                  <td>
-                    <ul className="table-action">
-                      {true ? (
-                        <>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Edit"
-                              onClick={() => handleEdit()}
-                            >
-                              <FilePenLine />
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Archive"
-                              onClick={() => handleArchive()}
-                            >
-                              <Archive />
-                            </button>
-                          </li>
-                        </>
+              {result?.count > 0 &&
+                result.data.map((item, key) => (
+                  <tr key={key}>
+                    <td>{counter++}.</td>
+                    <td>
+                      {item.category_is_active === 1 ? (
+                        <Status text="Active" />
                       ) : (
-                        <>
-                          <li>
-                            <button
-                              className="tooltip"
-                              data-tooltip="Restore"
-                              onClick={() => handleRestore()}
-                            >
-                              <ArchiveRestore />
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="tool-tip"
-                              data-tooltip="Delete"
-                              onClick={handleDelete}
-                            >
-                              <Trash2 />
-                            </button>
-                          </li>
-                        </>
+                        <Status text="inactive" />
                       )}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>{item.category_title}</td>
+                    <td>
+                      <ul className="table-action">
+                        {item.category_is_active ? (
+                          <>
+                            <li>
+                              <button className="tooltip" data-tooltip="Edit">
+                                <FilePenLine onClick={() => handleEdit(item)} />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Archive"
+                              >
+                                <Archive onClick={() => handleArchive(item)} />
+                              </button>
+                            </li>
+                          </>
+                        ) : (
+                          <>
+                            <li>
+                              <button
+                                className="tooltip"
+                                data-tooltip="Restore"
+                              >
+                                <ArchiveRestore
+                                  onClick={() => handleRestore(item)}
+                                />
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="tool-tip"
+                                data-tooltip="Delete"
+                              >
+                                <Trash2 onClick={() => handleDelete(item)} />
+                              </button>
+                            </li>
+                          </>
+                        )}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 
@@ -122,8 +142,27 @@ const CategoryTable = () => {
         </div>
       </div>
 
-      {store.isDelete && <ModalDelete />}
-      {store.isConfirm && <ModalConfirm />}
+      {store.isDelete && (
+        <ModalDelete
+          setIsDelete={setIsDelete}
+          mysqlApiDelete={`/v2/category/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isArchive && (
+        <ModalArchive
+          setIsArchive={setIsArchive}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isRestore && (
+        <ModalRestore
+          setIsRestore={setIsRestore}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
     </>
   );
 };
