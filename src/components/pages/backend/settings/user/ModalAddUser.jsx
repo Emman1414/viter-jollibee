@@ -16,7 +16,7 @@ import {
   setSuccess,
 } from "@/components/store/storeAction";
 
-const ModalAddRole = ({ itemEdit }) => {
+const ModalAddUser = ({ itemEdit }) => {
   const { dispatch, store } = React.useContext(StoreContext);
   const [value, setValue] = React.useState("");
   const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
@@ -36,11 +36,10 @@ const ModalAddRole = ({ itemEdit }) => {
 
       // show error box
       if (!data.success) {
-        dispatch(setError(false));
+        dispatch(setError(true));
         dispatch(setMessage(data.error));
         dispatch(setSuccess(false));
       } else {
-        console.log("Success");
         dispatch(setIsAdd(false));
         dispatch(setSuccess(true));
         dispatch(setMessage("Successful!"));
@@ -130,4 +129,4 @@ const ModalAddRole = ({ itemEdit }) => {
   );
 };
 
-export default ModalAddRole;
+export default ModalAddUser;

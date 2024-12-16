@@ -33,7 +33,11 @@ export const routesAdmin = [
   },
   {
     route: `/admin/settings/developer`,
-    element: <Developer />,
+    element: <Role />,
+  },
+  {
+    route: `/admin/settings/user`,
+    element: <Role />,
     },
   
   

@@ -36,11 +36,10 @@ const ModalAddRole = ({ itemEdit }) => {
 
       // show error box
       if (!data.success) {
-        dispatch(setError(false));
+        dispatch(setError(true));
         dispatch(setMessage(data.error));
         dispatch(setSuccess(false));
       } else {
-        console.log("Success");
         dispatch(setIsAdd(false));
         dispatch(setSuccess(true));
         dispatch(setMessage("Successful!"));

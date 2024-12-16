@@ -11,6 +11,7 @@ import SpinnerButton from "@/components/pages/backend/partials/spinners/SpinnerB
 const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);
   const handleClose = () => dispatch(setIsDelete(false));
+
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -23,6 +24,7 @@ const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
       if (!data.success) {
         dispatch(setError(true));
         dispatch(setMessage(data.error));
+        dispatch(setSuccess(false));
       } else {
         dispatch(setIsDelete(false));
         dispatch(setSuccess(true));

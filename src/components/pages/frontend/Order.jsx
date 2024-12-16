@@ -8,7 +8,7 @@ import ToastSuccess from "./ToastSuccess";
 import useQueryData from "@/components/custom-hook/useQueryData";
 
 const Order = () => {
-  const [categoryId, setCategoryId] = React.useState("Value Meal");
+  const [categoryId, setCategoryId] = React.useState("");
   const [cartData, setCartData] = React.useState([]);
   const [showCart, setShowCart] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
@@ -39,7 +39,7 @@ const Order = () => {
   };
 
   const categoryName =
-    categoryId === "" ? "Value Meal" : getCategoryName(categoryId, result);
+    categoryId === '' ? "Value Meal" : getCategoryName(categoryId, result);
 
   const getTotal = cartData.reduce((acc, item) => {
     return acc + item.food_price * item.quantity;

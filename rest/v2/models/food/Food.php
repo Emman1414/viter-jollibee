@@ -13,6 +13,7 @@ class Food
 
   public $category_aid;
   public $category_is_active;
+  public $category_image;
   public $category_title;
   public $category_datetime;
   public $category_created;

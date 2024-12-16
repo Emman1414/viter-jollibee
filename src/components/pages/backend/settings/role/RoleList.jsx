@@ -19,8 +19,8 @@ import ModalArchive from "../../partials/modals/ModalArchive";
 import Pills from "../../partials/Pills";
 
 const RoleList = ({ setItemEdit }) => {
-  const [id, setIsId] = React.useState("");
   const { store, dispatch } = React.useContext(StoreContext);
+  const [id, setIsId] = React.useState("");
   const [dataItem, setDataItem] = React.useState(null);
 
   let counter = 1;

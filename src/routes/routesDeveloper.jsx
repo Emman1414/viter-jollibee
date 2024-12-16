@@ -28,11 +28,11 @@ export const routesDeveloper = [
     element: <Settings />,
   },
   {
-    route: `/developer/settings/role`,
+    route: `/developer/settings/developer`,
     element: <Role />,
   },
   {
-    route: `/developer/settings/developer`,
-    element: <Developer />,
+    route: `/developer/settings/user`,
+    element: <Role />,
   },
 ];
