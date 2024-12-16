@@ -24,6 +24,11 @@ const SideNavigation = ({ menu }) => {
       slug: "/admin/category",
       icon: <ScrollText size={16} />,
     },
+    {
+      title: "Settings",
+      slug: "/admin/settings",
+      icon: <ScrollText size={16} />,
+    },
   ];
   return (
     <>

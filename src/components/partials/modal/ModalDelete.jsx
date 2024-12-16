@@ -1,9 +1,6 @@
 import { queryData } from "@/components/helpers/queryData";
 
-import {
-  useMutation,
-  useQueryClient
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 
 import ButtonSpinner from "../spinner/ButtonSpinner";
@@ -14,7 +11,6 @@ import SpinnerButton from "@/components/pages/backend/partials/spinners/SpinnerB
 const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);
   const handleClose = () => dispatch(setIsDelete(false));
-
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -25,14 +21,12 @@ const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
       dispatch(setIsDelete(false));
 
       if (!data.success) {
-        // dispatch(setError(true));
-        // dispatch(setMessage(data.error));
-        console.log("May error!");
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
       } else {
-        setIsDelete(false);
-        console.log("Naysuu!");
-        // dispatch(setSuccess(true));
-        // dispatch(setMessage(successMsg));
+        dispatch(setIsDelete(false));
+        dispatch(setSuccess(true));
+        dispatch(setMessage(successMsg));
       }
     },
   });
@@ -55,9 +49,7 @@ const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
           <h2 className="translate-y-2">
             <MdDelete size={35} className="" />
           </h2>
-          <button onClick={handleClose}>
-
-          </button>
+          <button onClick={handleClose}></button>
         </div>
         <div className="p-4 text-center">
           <h3 className="text-sm">Are you sure you want to delete {item}?</h3>

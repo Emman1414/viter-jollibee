@@ -68,16 +68,6 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
               </tr>
             </thead>
             <tbody>
-              {/* <tr>
-                <td colSpan={100}>
-                  <IconNoData />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={100}>
-                  <IconServerError />
-                </td>
-              </tr> */}
 
               {result?.count > 0 &&
                 result.data.map((item, key) => (

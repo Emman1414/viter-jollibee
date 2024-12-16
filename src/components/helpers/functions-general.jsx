@@ -1,8 +1,9 @@
 import React from "react";
 
+export const imgPath = "http://localhost/viter-jollibee/public/img";
+
 const urlJollibeeLocal = "http://localhost/viter-jollibee"; //from thunder client
 
-export const imgPath = "http://localhost/viter-jollibee/public/img";
 
 
 // ONLINE DEV and LOCAL hris

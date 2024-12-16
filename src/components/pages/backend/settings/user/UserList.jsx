@@ -1,22 +1,29 @@
-import React from "react";
-import { StoreContext } from "@/components/store/storeContext";
 import useQueryData from "@/components/custom-hook/useQueryData";
+import Loadmore from "@/components/partials/LoadMore";
 import ModalDelete from "@/components/partials/modal/ModalDelete";
 import ModalRestore from "@/components/partials/modal/ModalRestore";
-import Status from "@/components/partials/Status";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import TableLoader from "@/components/partials/TableLoader";
 import {
   setIsAdd,
   setIsArchive,
   setIsDelete,
   setIsRestore,
 } from "@/components/store/storeAction";
+import { StoreContext } from "@/components/store/storeContext";
 import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
-import LoadMore from "../partials/LoadMore";
-import ModalConfirm from "../partials/modals/ModalConfirm";
+import React from "react";
+import IconNoData from "../../partials/IconNoData";
+import IconServerError from "../../partials/IconServerError";
+import ModalArchive from "../../partials/modals/ModalArchive";
+import Pills from "../../partials/Pills";
 
-const FoodTable = ({ setItemEdit }) => {
+const UserList = ({ setItemEdit }) => {
   const [id, setIsId] = React.useState("");
   const { store, dispatch } = React.useContext(StoreContext);
+  const [dataItem, setDataItem] = React.useState(null);
+
+  let counter = 1;
 
   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
@@ -25,69 +32,88 @@ const FoodTable = ({ setItemEdit }) => {
 
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
-    setIsId(item.food_aid);
+    setIsId(item.role_aid);
+    setDataItem(item);
   };
 
   const handleArchive = (item) => {
     dispatch(setIsArchive(true));
-    setIsId(item.food_aid);
+    setIsId(item.role_aid);
   };
 
   const handleRestore = (item) => {
     dispatch(setIsRestore(true));
-    setIsId(item.food_aid);
+    setIsId(item.role_aid);
   };
 
   const {
     isFetching,
+    isLoading,
     error,
     data: result,
     status,
   } = useQueryData(
-    `/v2/food`, // endpoint
+    `/v2/role`, // endpoint
     "get", // method
-    "food" // key
+    "role" // key
   );
-
-  let counter = 1;
 
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
-        {/* <SpinnerTable /> */}
+        {isFetching && !isLoading && <FetchingSpinner />}
         <div className="table-wrapper custom-scroll">
-          {/* <TableLoader count={10} cols={4} /> */}
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Status</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Category</th>
+                <th>Role Name</th>
+                <th>Description</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
+              {isLoading && (
+                <tr>
+                  <td colSpan="100%">
+                    <TableLoader count={20} cols={5} />
+                  </td>
+                </tr>
+              )}
+              {result?.count === 0 && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconNoData />
+                  </td>
+                </tr>
+              )}
+              {error && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconServerError />
+                  </td>
+                </tr>
+              )}
+
               {result?.count > 0 &&
                 result.data.map((item, key) => (
                   <tr key={key}>
                     <td>{counter++}.</td>
                     <td>
-                      {item.food_is_active === 1 ? (
-                        <Status text="Active" />
+                      {item.role_is_active === 1 ? (
+                        <Pills text="Active" />
                       ) : (
-                        <Status text="Inactive" />
+                        <Pills text="Inactive" />
                       )}
                     </td>
-                    <td title={`${item.food_title}`}>{item.food_title}</td>
-                    <td title={`${item.food_price}`}>{item.food_price}</td>
-                    <td title={`${item.food_category_id}`}>
-                      {item.category_title}
-                    </td>
+                    <td>{item.role_name}</td>
+                    <td>{item.role_description}</td>
+                    <td></td>
                     <td>
                       <ul className="table-action">
-                        {item.food_is_active === 1 ? (
+                        {item.role_is_active === 1 ? (
                           <>
                             <li>
                               <button
@@ -141,27 +167,28 @@ const FoodTable = ({ setItemEdit }) => {
             </tbody>
           </table>
 
-          <LoadMore />
+          <Loadmore />
         </div>
         {store.isDelete && (
           <ModalDelete
             setIsDelete={setIsDelete}
-            mysqlApiDelete={`/v2/food/${id}`}
-            queryKey={"food"}
+            mysqlApiDelete={`/v2/role/${id}`}
+            queryKey={"role"}
+            item={dataItem.role_name}
           />
         )}
         {store.isArchive && (
-          <ModalConfirm
+          <ModalArchive
             setIsArchive={setIsArchive}
-            mysqlEndpoint={`/v2/food/active/${id}`}
-            queryKey={"food"}
+            mysqlEndpoint={`/v2/role/active/${id}`}
+            queryKey={"role"}
           />
         )}
         {store.isRestore && (
           <ModalRestore
             setIsRestore={setIsRestore}
-            mysqlEndpoint={`/v2/food/active/${id}`}
-            queryKey={"food"}
+            mysqlEndpoint={`/v2/role/active/${id}`}
+            queryKey={"role"}
           />
         )}
       </div>
@@ -169,4 +196,4 @@ const FoodTable = ({ setItemEdit }) => {
   );
 };
 
-export default FoodTable;
+export default UserList;

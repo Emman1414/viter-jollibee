@@ -11,10 +11,10 @@ const SliderBanner = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2400,
   };
   return (
-    <Slider {...settings}>
+    <Slider {...settings} className="transition-all">
       <img
         src={`${imgPath}/slider-1.jpg`}
         alt=""
