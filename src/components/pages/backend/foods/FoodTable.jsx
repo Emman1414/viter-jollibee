@@ -13,6 +13,10 @@ import {
 import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
 import LoadMore from "../partials/LoadMore";
 import ModalConfirm from "../partials/modals/ModalConfirm";
+import TableLoader from "@/components/partials/TableLoader";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
 
 const FoodTable = ({ setItemEdit }) => {
   const [id, setIsId] = React.useState("");
@@ -40,6 +44,7 @@ const FoodTable = ({ setItemEdit }) => {
 
   const {
     isFetching,
+    isLoading,
     error,
     data: result,
     status,
@@ -54,7 +59,7 @@ const FoodTable = ({ setItemEdit }) => {
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
-        {/* <SpinnerTable /> */}
+        {isFetching && !isLoading && <FetchingSpinner />}
         <div className="table-wrapper custom-scroll">
           {/* <TableLoader count={10} cols={4} /> */}
           <table>
@@ -69,6 +74,27 @@ const FoodTable = ({ setItemEdit }) => {
               </tr>
             </thead>
             <tbody>
+              {isLoading && (
+                <tr>
+                  <td colSpan="100%">
+                    <TableLoader count={20} cols={5} />
+                  </td>
+                </tr>
+              )}
+              {result?.count === 0 && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconNoData />
+                  </td>
+                </tr>
+              )}
+              {error && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconServerError />
+                  </td>
+                </tr>
+              )}
               {result?.count > 0 &&
                 result.data.map((item, key) => (
                   <tr key={key}>

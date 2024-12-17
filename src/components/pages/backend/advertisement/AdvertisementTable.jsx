@@ -10,9 +10,17 @@ import LoadMore from "../partials/LoadMore";
 import ModalConfirm from "../partials/modals/ModalConfirm";
 import ModalDelete from "../partials/modals/ModalDelete";
 import Pills from "../partials/Pills";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import TableLoader from "@/components/partials/TableLoader";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import useQueryData from "@/components/custom-hook/useQueryData";
+import { useQueryClient } from "@tanstack/react-query";
 
 const   AdvertisementTable = () => {
   const { store, dispatch } = React.useContext(StoreContext);
+
+   const queryClient = useQueryClient();
 
   let counter = 1;
 
@@ -32,10 +40,22 @@ const   AdvertisementTable = () => {
     dispatch(setIsConfirm(true));
   };
 
+  const {
+    isFetching,
+    isLoading,
+    error,
+    data: result,
+    status,
+  } = useQueryData(
+    `/v2/advertisement`, // endpoint
+    "get", // method
+    "advertisement" // key
+  );
+
   return (
     <>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
-        {/* <SpinnerTable /> */}
+        {isFetching && !isLoading && <FetchingSpinner />}
         <div className="table-wrapper custom-scroll">
           {/* <TableLoader count={10} cols={4} /> */}
           <table>
@@ -48,18 +68,29 @@ const   AdvertisementTable = () => {
               </tr>
             </thead>
             <tbody>
-              {/* <tr>
-                <td colSpan={100}>
-                  <IconNoData />
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={100}>
-                  <IconServerError />
-                </td>
-              </tr> */}
+              {isLoading && (
+                <tr>
+                  <td colSpan="100%">
+                    <TableLoader count={20} cols={5} />
+                  </td>
+                </tr>
+              )}
+              {result?.count === 0 && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconNoData />
+                  </td>
+                </tr>
+              )}
+              {error && (
+                <tr>
+                  <td colSpan="100%">
+                    <IconServerError />
+                  </td>
+                </tr>
+              )}
 
-              {Array.from(Array(30).keys()).map((i) => (
+              {Array.from(Array(0).keys()).map((i) => (
                 <tr key={i}>
                   <td>{counter++}</td>
                   <td>
@@ -118,7 +149,7 @@ const   AdvertisementTable = () => {
             </tbody>
           </table>
 
-          <LoadMore />
+          {/* <LoadMore /> */}
         </div>
       </div>
 

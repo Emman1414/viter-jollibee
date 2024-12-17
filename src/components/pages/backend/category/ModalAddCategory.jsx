@@ -160,7 +160,7 @@ const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
                     </div>
                     <div className="form-action flex p-4 justify-end gap-3">
                       <button className="btn btn-add" type="submit">
-                        {mutation.isPending ? <SpinnerButton /> : "Add"}
+                        {mutation.isPending ? <SpinnerButton /> : "Save"}
                       </button>
                       <button
                         className="btn btn-cancel"
