@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 16, 2024 at 08:56 AM
+-- Generation Time: Dec 17, 2024 at 08:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,13 +42,15 @@ CREATE TABLE `jollibee_category` (
 
 INSERT INTO `jollibee_category` (`category_aid`, `category_is_active`, `category_image`, `category_title`, `category_datetime`, `category_created`) VALUES
 (18, 1, 'nav-chickenjoy.webp', 'Chickenjoy', '2024-12-11 15:25:12', 2024),
-(19, 1, 'burger-1.webp', 'Yum Burger', '2024-12-11 15:25:41', 2024),
-(20, 1, 'nav-spaghetti.webp', 'Spaghetti', '2024-12-11 15:05:12', 2024),
+(19, 1, 'burger-1.webp', 'Yum Burger', '', 2024),
+(20, 0, 'nav-spaghetti.webp', 'Spaghetti', '', 2024),
 (21, 1, 'nav-sides.webp', 'Sides', '2024-12-11 15:06:23', 2024),
 (29, 1, 'palabok-3.webp', 'Palabok', '2024-12-11 15:05:52', 2024),
 (30, 1, 'dessert-1.webp', 'Desserts', '2024-12-11 15:06:13', 2024),
-(31, 1, 'value-meal-1.webp', 'Value Meal', '2024-12-11 15:06:59', 2024),
-(33, 1, 'steak-1.webp', 'Burger Steak', '2024-12-11 15:12:04', 2024);
+(31, 0, 'value-meal-1.webp', 'Value Meal', '', 2024),
+(33, 1, 'steak-1.webp', 'Burger Steak', '', 2024),
+(36, 1, 'dessert-5.webp', 'Drink', '2024-12-17 12:38:59', 2024),
+(37, 1, 'burger-1.webp', 'Sample', '2024-12-17 12:39:49', 2024);
 
 -- --------------------------------------------------------
 
@@ -126,18 +128,15 @@ CREATE TABLE `jollibee_settings_role` (
   `role_description` text NOT NULL,
   `role_created` datetime NOT NULL,
   `role_datetime` datetime NOT NULL,
-  `role_is_admin` tinyint(1) DEFAULT NULL,
-  `role_is_sample` tinyint(1) NOT NULL
+  `role_is_admin` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `jollibee_settings_role`
 --
 
-INSERT INTO `jollibee_settings_role` (`role_aid`, `role_is_active`, `role_name`, `role_description`, `role_created`, `role_datetime`, `role_is_admin`, `role_is_sample`) VALUES
-(3, 1, 'admin', 'admin', '2024-12-16 15:14:03', '2024-12-16 15:14:26', 1, 0),
-(4, 1, 'tip toe', 'asdasd', '2024-12-16 15:20:40', '2024-12-16 15:20:40', NULL, 0),
-(5, 1, 'sample', 'asdsad', '2024-12-16 15:27:18', '2024-12-16 15:27:18', NULL, 1);
+INSERT INTO `jollibee_settings_role` (`role_aid`, `role_is_active`, `role_name`, `role_description`, `role_created`, `role_datetime`, `role_is_admin`) VALUES
+(3, 1, 'admin', 'admin', '2024-12-16 15:14:03', '2024-12-16 15:14:26', 1);
 
 --
 -- Indexes for dumped tables
@@ -169,7 +168,7 @@ ALTER TABLE `jollibee_settings_role`
 -- AUTO_INCREMENT for table `jollibee_category`
 --
 ALTER TABLE `jollibee_category`
-  MODIFY `category_aid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `category_aid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `jollibee_food`
