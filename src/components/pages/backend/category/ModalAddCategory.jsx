@@ -21,7 +21,7 @@ import { imgPath } from "@/components/helpers/functions-general";
 const ModalAddCategory = ({ isCategoryEdit, setIsCategoryEdit }) => {
   const { dispatch } = React.useContext(StoreContext);
   const [value, setValue] = React.useState("");
-  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto(" ");
+  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
 
   const queryClient = useQueryClient();
 

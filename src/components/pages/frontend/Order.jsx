@@ -25,6 +25,17 @@ const Order = () => {
     "category" // key
   );
 
+  const {
+    isLoading: isLoadingAdvertisement,
+    isFetching: isFetchingAdvertisement,
+    error: errorAdvertisement,
+    data: dataAdvertisement,
+  } = useQueryData(
+    `/v2/advertisement/read-all-active-advertisement`, // endpoint
+    "get", // method
+    "advertisement/read-all-active-advertisement" // key
+  );
+
   const getCategoryName = (categoryId, categoryResult) => {
     // initialize another array
     let categorySelectedName = "";
@@ -39,7 +50,7 @@ const Order = () => {
   };
 
   const categoryName =
-    categoryId === '' ? "Value Meal" : getCategoryName(categoryId, result);
+    categoryId === "" ? "Value Meal" : getCategoryName(categoryId, result);
 
   const getTotal = cartData.reduce((acc, item) => {
     return acc + item.food_price * item.quantity;
@@ -47,7 +58,12 @@ const Order = () => {
 
   return (
     <>
-      <SliderBanner />
+      <SliderBanner
+        isLoadingAdvertisement={isLoadingAdvertisement}
+        isFetchingAdvertisement={isFetchingAdvertisement}
+        errorAdvertisement={errorAdvertisement}
+        dataAdvertisement={dataAdvertisement}
+      />
       <div className="grid grid-rows-[auto,_1fr,_auto] min-h-[calc(100vh-200px)]">
         <MenuTitle categoryName={categoryName} />
         <section className="grid grid-cols-[150px,_1fr] bg-myred px-3">

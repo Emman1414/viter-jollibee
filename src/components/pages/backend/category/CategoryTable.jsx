@@ -38,7 +38,7 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
   const [statusFilter, setStatusFilter] = React.useState("");
   const search = React.useRef({ value: "" });
   const [page, setPage] = React.useState(1);
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView(); // need installation
 
   let counter = 1;
 
@@ -142,6 +142,7 @@ const CategoryTable = ({ setIsCategoryEdit }) => {
               </tr>
             </thead>
             <tbody>
+              {/* LOADING */}
               {(status === "pending" || result?.pages[0].data.length === 0) && (
                 <tr>
                   <td colSpan="100%" className="p-10">
