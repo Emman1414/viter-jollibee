@@ -24,6 +24,10 @@ const SearchBarWithFilterStatus = ({
     }
   };
 
+  const resultCount = result?.pages[0]?.count
+    ? result?.pages[0]?.total
+    : result?.pages[0]?.count;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let val = search.current.value;
@@ -72,7 +76,7 @@ const SearchBarWithFilterStatus = ({
           </select>
           <p className="leading-none flex items-center gap-2">
             <FaList />
-            <span>{isFetching ? "Searching..." : result?.pages[0].count}</span>
+            <span>{isFetching ? "Searching..." : resultCount}</span>
           </p>
         </div>
         <div className="search relative">

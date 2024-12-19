@@ -2,9 +2,7 @@ import React from "react";
 
 export const imgPath = "http://localhost/viter-jollibee/public/img";
 
-const urlJollibeeLocal = "http://localhost/viter-jollibee"; //from thunder client
-
-
+export const urlJollibeeLocal = "http://localhost/viter-jollibee"; //from thunder client
 
 // ONLINE DEV and LOCAL hris
 export const devApiUrl = `${urlJollibeeLocal}/rest`;
@@ -22,4 +20,17 @@ export const GetFocus = (id) => {
     const obj = document.getElementById(id);
     obj.focus();
   }, []);
+};
+
+export const fetchFormData = (url, fd = {}) => {
+  console.log(fd);
+  const data = fetch(url, {
+    method: "post",
+    body: fd,
+  })
+    .then((res) => res.json())
+    .catch((error) => {
+      console.error(error + " api endpoint error");
+    });
+  return data;
 };
