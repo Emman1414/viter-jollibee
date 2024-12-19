@@ -1,4 +1,10 @@
+import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
+import ModalDelete from "@/components/partials/modal/ModalDelete";
+import ModalRestore from "@/components/partials/modal/ModalRestore";
+import ModalArchive from "../partials/modals/ModalArchive";
+import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
 import Status from "@/components/partials/Status";
+import TableLoader from "@/components/partials/TableLoader";
 import {
   setIsAdd,
   setIsArchive,
@@ -6,29 +12,18 @@ import {
   setIsRestore,
 } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
-import React from "react";
-import ModalArchive from "../partials/modals/ModalArchive";
-import useQueryData from "@/components/custom-hook/useQueryData";
-import ModalRestore from "@/components/partials/modal/ModalRestore";
-import ModalDelete from "@/components/partials/modal/ModalDelete";
-import { useInView } from "react-intersection-observer";
-import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
-import TableLoader from "@/components/partials/TableLoader";
-import IconNoData from "../partials/IconNoData";
-import IconServerError from "../partials/IconServerError";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
-import SearchBar from "@/components/partials/SearchBar";
-import Loadmore from "@/components/partials/LoadMore";
+import React from "react";
 import {
   FaArchive,
   FaEdit,
   FaTrash,
-  FaTrashRestore,
-  FaTrashRestoreAlt,
+  FaTrashRestoreAlt
 } from "react-icons/fa";
-import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
+import { useInView } from "react-intersection-observer";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import Loadmore from "@/components/partials/LoadMore";
 
 const CategoryTable = ({ setIsCategoryEdit }) => {
   const [id, setIsId] = React.useState("");

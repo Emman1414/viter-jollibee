@@ -1,8 +1,8 @@
-import React from "react";
-import { FaList, FaSearch } from "react-icons/fa";
+  import React from "react";
+  import { FaList, FaSearch } from "react-icons/fa";
 
-import { MdOutlineSearch } from "react-icons/md";
-import { setError, setIsSearch, setMessage } from "../store/storeAction";
+  import { MdOutlineSearch } from "react-icons/md";
+  import { setError, setIsSearch, setMessage } from "../store/storeAction";
 
 const SearchBarWithFilterStatus = ({
   search,
