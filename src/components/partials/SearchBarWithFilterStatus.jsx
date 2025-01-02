@@ -1,8 +1,8 @@
-import React from "react";
-import { FaList, FaSearch } from "react-icons/fa";
+  import React from "react";
+  import { FaList, FaSearch } from "react-icons/fa";
 
-import { MdOutlineSearch } from "react-icons/md";
-import { setError, setIsSearch, setMessage } from "../store/storeAction";
+  import { MdOutlineSearch } from "react-icons/md";
+  import { setError, setIsSearch, setMessage } from "../store/storeAction";
 
 const SearchBarWithFilterStatus = ({
   search,
@@ -25,6 +25,10 @@ const SearchBarWithFilterStatus = ({
     }
   };
 
+  const resultCount = result?.pages[0]?.count
+    ? result?.pages[0]?.total
+    : result?.pages[0]?.count;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let val = search.current.value;
@@ -41,6 +45,7 @@ const SearchBarWithFilterStatus = ({
   };
 
   const handleChangeStatus = (e, setStatusFilter) => {
+    search.current.value = "";
     setStatusFilter(e.target.value);
     setIsFilter(false);
     setPage(1);
@@ -72,7 +77,7 @@ const SearchBarWithFilterStatus = ({
           </select>
           <p className="leading-none flex items-center gap-2">
             <FaList />
-            <span>{isFetching ? "Searching..." : result?.pages[0].count}</span>
+            <span>{isFetching ? "Searching..." : resultCount}</span>
           </p>
         </div>
         <div className="search relative">

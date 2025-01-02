@@ -7,6 +7,7 @@ import ButtonSpinner from "../spinner/ButtonSpinner";
 import { MdDelete } from "react-icons/md";
 import { StoreContext } from "@/components/store/storeContext";
 import SpinnerButton from "@/components/pages/backend/partials/spinners/SpinnerButton";
+import { setError, setMessage, setSuccess } from "@/components/store/storeAction";
 
 const ModalDelete = ({ setIsDelete, mysqlApiDelete, queryKey, item }) => {
   const { store, dispatch } = React.useContext(StoreContext);

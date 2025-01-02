@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2024 at 08:54 AM
+-- Generation Time: Dec 18, 2024 at 08:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `jollibeee_v1`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jollibee_advertisement`
+--
+
+CREATE TABLE `jollibee_advertisement` (
+  `ads_aid` int(11) NOT NULL,
+  `ads_is_active` tinyint(1) NOT NULL,
+  `ads_image` varchar(30) NOT NULL,
+  `ads_title` varchar(50) NOT NULL,
+  `ads_datetime` varchar(20) NOT NULL,
+  `ads_created` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `jollibee_advertisement`
+--
+
+INSERT INTO `jollibee_advertisement` (`ads_aid`, `ads_is_active`, `ads_image`, `ads_title`, `ads_datetime`, `ads_created`) VALUES
+(16, 1, 'slider-1.jpg', 'Sample 1', '2024-12-18 14:05:10', 2024),
+(17, 1, 'slider-2.png', 'Sample 2', '2024-12-18 14:05:26', 2024),
+(18, 1, 'slider-3.jpg', 'Sample 3', '2024-12-18 14:05:40', 2024);
 
 -- --------------------------------------------------------
 
@@ -113,7 +137,7 @@ INSERT INTO `jollibee_food` (`food_aid`, `food_is_active`, `food_image`, `food_t
 (48, 1, 'value-meal-5.webp', '2 ChickenBurger & 2LargeFries ', 2005, 31, '2024-12-11 15:55:53', 2024),
 (49, 1, 'steak-1.webp', 'Steak', 90, 33, '2024-12-16 10:04:32', 2024),
 (50, 1, 'steak-2.webp', 'Family Steak', 6456, 33, '2024-12-11 15:56:29', 2024),
-(51, 1, 'steak-3.webp', 'Family Steak & Bucket Meal w/ ', 600, 33, '2024-12-11 15:57:04', 2024);
+(51, 1, 'steak-3.webp', 'Family Steak & Bucket Meal w/ ', 600, 33, '', 2024);
 
 -- --------------------------------------------------------
 
@@ -143,6 +167,12 @@ INSERT INTO `jollibee_settings_role` (`role_aid`, `role_is_active`, `role_name`,
 --
 
 --
+-- Indexes for table `jollibee_advertisement`
+--
+ALTER TABLE `jollibee_advertisement`
+  ADD PRIMARY KEY (`ads_aid`);
+
+--
 -- Indexes for table `jollibee_category`
 --
 ALTER TABLE `jollibee_category`
@@ -163,6 +193,12 @@ ALTER TABLE `jollibee_settings_role`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `jollibee_advertisement`
+--
+ALTER TABLE `jollibee_advertisement`
+  MODIFY `ads_aid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `jollibee_category`

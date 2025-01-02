@@ -42,7 +42,7 @@ const ModalAddRole = ({ itemEdit }) => {
       } else {
         dispatch(setIsAdd(false));
         dispatch(setSuccess(true));
-        dispatch(setMessage("Successful!"));
+        dispatch(setMessage("Recorded Successfully"));
       }
     },
   });

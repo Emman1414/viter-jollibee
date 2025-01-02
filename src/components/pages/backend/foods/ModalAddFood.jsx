@@ -17,7 +17,7 @@ import { imgPath } from "@/components/helpers/functions-general";
 const ModalAddFood = ({ itemEdit }) => {
   const { dispatch } = React.useContext(StoreContext);
   const [value, setValue] = React.useState("");
-  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
+  const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("/v2/upload-photo");
 
   const handleClose = () => {
     dispatch(setIsAdd(false));
@@ -176,15 +176,15 @@ const ModalAddFood = ({ itemEdit }) => {
                           onChange={handleChange}
                         >
                           <option value="" hidden></option>
-                          {categ?.data.map((item, key) => {
+                          {categ?.data.map((item, key) => { 
                             return (
-                              <>
+                              <React.Fragment key={key} >
                                 {item.category_is_active === 1 && (
                                   <option key={key} value={item.category_aid}>
                                     {item.category_title}
                                   </option>
                                 )}
-                              </>
+                              </React.Fragment>
                             );
                           })}
                         </InputSelect>

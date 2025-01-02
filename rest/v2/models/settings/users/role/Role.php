@@ -2,75 +2,73 @@
 
 class Role
 {
-    public $role_aid;
-    public $role_is_active;
-    public $role_name;
-    public $role_description;
-    public $role_datetime;
-    public $role_created;
+  public $role_aid;
+  public $role_is_active;
+  public $role_name;
+  public $role_description;
+  public $role_datetime;
+  public $role_created;
 
-    public $connection;
-    public $lastInsertedId;
-    public $role_start;
-    public $role_total;
-    public $role_search;
+  public $connection;
+  public $lastInsertedId;
+  public $role_start;
+  public $role_total;
+  public $role_search;
+  public $tblRole;
 
-    public $tblRole;
-
-    public function __construct($db)
-    {
-        $this->connection = $db;
-        $this->tblRole = "jollibee_settings_role";
-        
-    }
-
-    public function readAll()
-      {
-        try {
-          $sql = "select * from {$this->tblRole} ";
-          $sql .= "order by role_is_active desc, ";
-          $sql .= "role_aid asc ";
-          $query = $this->connection->query($sql);
-        } catch (PDOException $ex) {
-          $query = false;
-        }
-        return $query;
-      }
-
-      public function readLimit()
-      {
-        try {
-          $sql = "select * from {$this->tblRole} ";
-          $sql .= "order by role_is_active desc, ";
-          $sql .= "role_aid asc ";
-          $sql .= "limit :start, ";
-          $sql .= ":total ";
-          $query = $this->connection->prepare($sql);
-          $query->execute([
-              "start" => $this->role_start - 1,
-              "total" => $this->role_total,
-          ]);
-      } catch (PDOException $ex) {
-          $query = false;
-      }
-      return $query;
+  public function __construct($db)
+  {
+    $this->connection = $db;
+    $this->tblRole = "jollibee_settings_role";
   }
-      public function readById()
-      {
-          try {
-              $sql = "select * from {$this->tblRole} ";
-              $sql .= "where role_aid = :role_aid ";
-              $query = $this->connection->prepare($sql);
-              $query->execute([
-                  "role_aid" => $this->role_aid,
-              ]);
-          } catch (PDOException $ex) {
-              $query = false;
-          }
-          return $query;
-      }
 
-      public function create()
+  public function readAll()
+  {
+    try {
+      $sql = "select * from {$this->tblRole} ";
+      $sql .= "order by role_is_active desc, ";
+      $sql .= "role_aid asc ";
+      $query = $this->connection->query($sql);
+    } catch (PDOException $ex) {
+      $query = false;
+    }
+    return $query;
+  }
+
+  public function readLimit()
+  {
+    try {
+      $sql = "select * from {$this->tblRole} ";
+      $sql .= "order by role_is_active desc, ";
+      $sql .= "role_aid asc ";
+      $sql .= "limit :start, ";
+      $sql .= ":total ";
+      $query = $this->connection->prepare($sql);
+      $query->execute([
+        "start" => $this->role_start - 1,
+        "total" => $this->role_total,
+      ]);
+    } catch (PDOException $ex) {
+      $query = false;
+    }
+    return $query;
+  }
+  public function readById()
+  {
+    try {
+      $sql = "select * from {$this->tblRole} ";
+      $sql .= "where role_aid = :role_aid ";
+      $query = $this->connection->prepare($sql);
+      $query->execute([
+        "role_aid" => $this->role_aid,
+      ]);
+    } catch (PDOException $ex) {
+      $query = false;
+    }
+    return $query;
+  }
+
+  public function create()
   {
     try {
       $sql = "insert into {$this->tblRole} ";
@@ -152,20 +150,20 @@ class Role
   }
 
   public function active()
-    {
+  {
     try {
-    $sql = "update {$this->tblRole} set ";
-    $sql .= "role_is_active = :role_is_active, ";
-    $sql .= "role_datetime = :role_datetime ";
-    $sql .= "where role_aid  = :role_aid ";
-    $query = $this->connection->prepare($sql);
-    $query->execute([
-    "role_is_active" => $this->role_is_active,
-    "role_datetime" => $this->role_datetime,
-    "role_aid" => $this->role_aid,
-    ]);
+      $sql = "update {$this->tblRole} set ";
+      $sql .= "role_is_active = :role_is_active, ";
+      $sql .= "role_datetime = :role_datetime ";
+      $sql .= "where role_aid  = :role_aid ";
+      $query = $this->connection->prepare($sql);
+      $query->execute([
+        "role_is_active" => $this->role_is_active,
+        "role_datetime" => $this->role_datetime,
+        "role_aid" => $this->role_aid,
+      ]);
     } catch (PDOException $ex) {
-    $query = false;
+      $query = false;
     }
     return $query;
   }
@@ -234,4 +232,3 @@ class Role
     return $query;
   }
 }
-
