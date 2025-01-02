@@ -251,7 +251,7 @@ class Developer
             $sql .= "{$this->tblRole} as role ";
             $sql .= "where ";
             $sql .= "dev.user_developer_role_id = role.role_aid ";
-            $sql .= "and dev.user_developer_is_active = user_developer_is_active ";
+            $sql .= "and dev.user_developer_is_active = :user_developer_is_active ";
             $sql .= "and ";
             $sql .= " ( ";
             $sql .= "dev.user_developer_first_name like :user_developer_first_name ";
@@ -399,7 +399,7 @@ class Developer
     {
         try {
             $sql = "select user_developer_email from {$this->tblDeveloper} ";
-            $sql .= "where user_developer_email = :user_developer_email ";
+            // $sql .= "where user_developer_new_email = :user_developer_new_email ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_email" => "{$this->user_developer_email}",
