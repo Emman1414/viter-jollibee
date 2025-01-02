@@ -48,7 +48,7 @@ const Role = () => {
       </section>
 
       {store.success && <ToastSuccess />}
-      {store.error && <ModalError />}
+        {store.error && <ModalError />}
       {store.isAdd && <ModalAddRole itemEdit={itemEdit} />}
     </>
   );

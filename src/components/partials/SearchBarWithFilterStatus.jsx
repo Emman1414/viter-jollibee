@@ -16,6 +16,7 @@ const SearchBarWithFilterStatus = ({
   setStatusFilter,
   setIsFilter,
   setPage,
+  setItemEdit,
 }) => {
   const handleChange = (e) => {
     if (e.target.value === "") {
