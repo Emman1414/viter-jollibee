@@ -15,6 +15,7 @@ const initVal = {
   isAdd: false,
   isView: false,
   isAnimating: true,
+  isCreatePassSuccess: true,
 };
 
 const StoreContext = React.createContext();

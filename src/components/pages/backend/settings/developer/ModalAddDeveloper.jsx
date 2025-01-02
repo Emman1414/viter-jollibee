@@ -16,7 +16,7 @@ import {
   setSuccess,
 } from "@/components/store/storeAction";
 
-const ModalAddRole = ({ itemEdit }) => {
+const ModalAddDeveloper = ({ itemEdit, developerRole }) => {
   const { dispatch, store } = React.useContext(StoreContext);
   const [value, setValue] = React.useState("");
   const { uploadPhoto, handleChangePhoto, photo } = useUploadPhoto("");
@@ -26,13 +26,13 @@ const ModalAddRole = ({ itemEdit }) => {
   const mutation = useMutation({
     mutationFn: (values) =>
       queryData(
-        itemEdit ? `/v2/role/${itemEdit.role_aid}` : "/v2/role",
+        itemEdit ? `/v2/developer/${itemEdit.developer_aid}` : "/v2/developer",
         itemEdit ? "PUT" : "POST",
         values
       ),
     onSuccess: (data) => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["role"] });
+      queryClient.invalidateQueries({ queryKey: ["developer"] });
 
       // show error box
       if (!data.success) {
@@ -42,7 +42,7 @@ const ModalAddRole = ({ itemEdit }) => {
       } else {
         dispatch(setIsAdd(false));
         dispatch(setSuccess(true));
-        dispatch(setMessage("Recorded Successfully"));
+        dispatch(setMessage("Successful!"));
       }
     },
   });
@@ -53,16 +53,27 @@ const ModalAddRole = ({ itemEdit }) => {
   };
 
   const initVal = {
-    role_name: itemEdit ? itemEdit.role_name : "",
-    role_description: itemEdit ? itemEdit.role_description : "",
-    role_name_old: itemEdit ? itemEdit.role_name : "",
+    user_developer_first_name: itemEdit
+      ? itemEdit.user_developer_first_name
+      : "",
+    user_developer_last_name: itemEdit ? itemEdit.user_developer_last_name : "",
+    user_developer_email: itemEdit ? itemEdit.user_developer_email : "",
+    user_developer_role_id: developerRole[0].role_aid,
+
+    user_developer_email_old: itemEdit ? itemEdit.user_developer_email : "",
+    user_developer_name_old: itemEdit
+      ? `${itemEdit.user_developer_first_name} ${itemEdit.user_developer_last_name}`
+      : "",
   };
 
   const yupSchema = Yup.object({
-    role_name: Yup.string()
+    user_developer_first_name: Yup.string()
       .matches(/^[A-Za-z]+$/, "Invalid Name")
       .required("Required"),
-    role_description: Yup.string().required("Required"),
+    user_developer_last_name: Yup.string().required("Required"),
+    user_developer_email: Yup.string()
+      .required("Required")
+      .email("Invalid Email."),
   });
 
   return (
@@ -70,7 +81,7 @@ const ModalAddRole = ({ itemEdit }) => {
       <ModalWrapper>
         <div className="modal-side absolute top-0 right-0 bg-primary h-[100dvh] w-[300px] border-l border-line">
           <div className="modal-header p-4 flex justify-between items-center">
-            <h5 className="mb-0">Add role</h5>
+            <h5 className="mb-0">{itemEdit ? "Update" : "Add"} Developer</h5>
             <button onClick={handleClose}>
               <X />
             </button>
@@ -92,17 +103,25 @@ const ModalAddRole = ({ itemEdit }) => {
                     <div className="form-wrapper p-4 max-h-[85vh] h-full overflow-y-auto custom-scroll">
                       <div className="input-wrap">
                         <InputText
-                          label="Role Name"
+                          label="Developer First Name"
                           type="text"
-                          name="role_name"
+                          name="user_developer_first_name"
                         />
                       </div>
 
                       <div className="input-wrap mt-8">
                         <InputTextArea
-                          label="Role Description"
+                          label="Developer Last Name"
                           type="text"
-                          name="role_description"
+                          name="user_developer_last_name"
+                        />
+                      </div>
+
+                      <div className="input-wrap mt-8">
+                        <InputTextArea
+                          label="Email"
+                          type="text"
+                          name="user_developer_email"
                         />
                       </div>
                     </div>
@@ -129,4 +148,4 @@ const ModalAddRole = ({ itemEdit }) => {
   );
 };
 
-export default ModalAddRole;
+export default ModalAddDeveloper;
