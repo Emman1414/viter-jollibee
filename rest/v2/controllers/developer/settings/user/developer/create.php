@@ -33,7 +33,7 @@ sendEmail(
 );
 
 //checks newly added data if it already exists
-isEmailExist($developer, $developer->user_developer_first_name);
+// isEmailExist($developer, $developer->user_developer_first_name);
 
 $query = checkCreate($developer);
 returnSuccess($developer, "developer", $query);

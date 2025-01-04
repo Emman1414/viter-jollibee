@@ -42,7 +42,7 @@ const ModalAddDeveloper = ({ itemEdit, developerRole }) => {
       } else {
         dispatch(setIsAdd(false));
         dispatch(setSuccess(true));
-        dispatch(setMessage("Successful!"));
+        dispatch(setMessage("Recorded Successfully"));
       }
     },
   });
@@ -67,9 +67,7 @@ const ModalAddDeveloper = ({ itemEdit, developerRole }) => {
   };
 
   const yupSchema = Yup.object({
-    user_developer_first_name: Yup.string()
-      .matches(/^[A-Za-z]+$/, "Invalid Name")
-      .required("Required"),
+    user_developer_first_name: Yup.string().required("Required"),
     user_developer_last_name: Yup.string().required("Required"),
     user_developer_email: Yup.string()
       .required("Required")
@@ -81,7 +79,7 @@ const ModalAddDeveloper = ({ itemEdit, developerRole }) => {
       <ModalWrapper>
         <div className="modal-side absolute top-0 right-0 bg-primary h-[100dvh] w-[300px] border-l border-line">
           <div className="modal-header p-4 flex justify-between items-center">
-            <h5 className="mb-0">{itemEdit ? "Update" : "Add"} Developer</h5>
+            <h5 className="mb-0">{itemEdit ? "Update" : "Add"} Developer User</h5>
             <button onClick={handleClose}>
               <X />
             </button>
@@ -100,7 +98,7 @@ const ModalAddDeveloper = ({ itemEdit, developerRole }) => {
               return (
                 <Form>
                   <div className="modal-form h-full max-h-[calc(100vh-56px)] grid grid-rows-[1fr_auto]">
-                    <div className="form-wrapper p-4 max-h-[85vh] h-full overflow-y-auto custom-scroll">
+                    <div className="form-wrapper p-4 max-h-[80vh] h-full overflow-y-auto custom-scroll">
                       <div className="input-wrap">
                         <InputText
                           label="Developer First Name"

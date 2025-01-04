@@ -11,6 +11,7 @@ import Footer from "../../partials/Footer";
 import ToastSuccess from "../../partials/ToastSuccess";
 import ModalError from "../../partials/modals/ModalError";
 import { Plus } from "lucide-react";
+import { FaPlus } from "react-icons/fa";
 
 const Developer = () => {
   const { dispatch, store } = React.useContext(StoreContext);
@@ -42,7 +43,7 @@ const Developer = () => {
               <div className="flex justify-between items-end">
                 <div></div>
 
-                {isFetching ? (
+                {/* {isFetching ? (
                   "Loading..."
                 ) : (
                   <button
@@ -53,7 +54,15 @@ const Developer = () => {
                     <Plus size={16} />
                     Add New
                   </button>
-                )}
+                )} */}
+
+                <button
+                  type="button"
+                  className="btn btn-add"
+                  onClick={handleAdd}
+                >
+                  <FaPlus /> Add New
+                </button>
               </div>
               <DeveloperList setItemEdit={setItemEdit} />
             </div>
@@ -63,7 +72,7 @@ const Developer = () => {
       </section>
 
       {store.success && <ToastSuccess />}
-      {store.error && <ModalError />}
+      {/* {store.error && <ModalError />} */}
       {store.isAdd && (
         <ModalAddDeveloper itemEdit={itemEdit} developerRole={developerRole} />
       )}

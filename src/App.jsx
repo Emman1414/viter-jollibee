@@ -9,6 +9,7 @@ import { StoreProvider } from "./components/store/storeContext";
 import { routesDeveloper } from "./routes/RoutesDeveloper";
 import { routesAdmin } from "./routes/routesAdmin";
 import DeveloperCreatePassword from "./components/pages/backend/access/create-password/DeveloperCreatePassword";
+import DeveloperLogin from "./components/pages/backend/access/DeveloperLogin";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -39,13 +40,18 @@ const App = () => {
             <Route path="/admin/foods" element={<Foods />} />
             <Route path="/admin/category" element={<Category />} />
             <Route path="/admin/dashboard" element={<Dashboard />} /> */}
+            
+
+            {/* FOR LATER */}
+            <Route path="/developer/login" element={<DeveloperLogin/>}/> 
+
             <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin/setpassword" element={<SetPassword />} />
+            <Route path="/admin/set-password" element={<SetPassword />} />
             <Route
               path="/developer/create-password"
               element={<DeveloperCreatePassword />}
             />
-            <Route path="/admin/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/admin/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </Router>
       </StoreProvider>

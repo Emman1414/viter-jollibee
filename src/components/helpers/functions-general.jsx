@@ -13,13 +13,13 @@ export const devBaseUrl = `${urlJollibeeLocal}`;
 // dev key from thunder client
 export const devKey =
   "$2a$12$47wDvbLInZif/PVS8B6P3.7WxyJvUpBzZAWCsnWJUKq3nrn4qgmeO";
-  
-  // get the url id parameter
-  export const getUrlParam = () => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    return urlParams;
-  };
+
+// get the url id parameter
+export const getUrlParam = () => {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  return urlParams;
+};
 // get focus on a button
 export const GetFocus = (id) => {
   React.useEffect(() => {
@@ -27,6 +27,11 @@ export const GetFocus = (id) => {
     obj.focus();
   }, []);
 };
+
+// storage after login
+export function setStorageRoute(jwt) {
+  localStorage.setItem("jollibeetoken", JSON.stringify({ token: jwt }));
+}
 
 export const fetchFormData = (url, fd = {}) => {
   console.log(fd);
@@ -40,4 +45,3 @@ export const fetchFormData = (url, fd = {}) => {
     });
   return data;
 };
-

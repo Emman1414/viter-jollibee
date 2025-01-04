@@ -6,7 +6,7 @@ require '../../../../../core/Encryption.php';
 require '../../../../../core/functions.php';
 // require 'functions.php';
 // use needed classes
-require '../../../../../models/developer/settings/developer/Developer.php';
+require '../../../../../models/developer/settings/user/developer/Developer.php';
 // get payload
 
 $body = file_get_contents("php://input");

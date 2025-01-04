@@ -1,34 +1,48 @@
-import { InputText } from "@/components/helpers/FormInputs";
-import { getUrlParam, imgPath } from "@/components/helpers/functions-general";
-import { Form, Formik } from "formik";
-import { CheckCircle2, Eye, EyeOff } from "lucide-react";
+import {
+  devNavUrl,
+  getUrlParam,
+  imgPath,
+} from "@/components/helpers/functions-general";
+import {
+  CheckCircle2,
+  Eye,
+  EyeClosed,
+  EyeOff,
+  ShieldCheck,
+} from "lucide-react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "Yup";
+import { Form, Formik } from "formik";
+import {
+  setCreatePassSuccess,
+  setError,
+  setMessage,
+  setSuccess,
+} from "@/components/store/storeAction";
 import SpinnerButton from "../../partials/spinners/SpinnerButton";
 import useQueryData from "@/components/custom-hook/useQueryData";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryData } from "@/components/helpers/queryData";
 import { StoreContext } from "@/components/store/storeContext";
-import { useQueryClient } from "@tanstack/react-query";
+import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import { InputText } from "@/components/helpers/FormInputs";
 
 const DeveloperCreatePassword = () => {
-  const { dispatch, store } = React.useState(StoreContext);
+  const { dispatch, store } = React.useContext(StoreContext);
   const [theme, setTheme] = React.useState(localStorage.getItem("theme"));
   const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-  const [showIconPassword, setShowIconPassword] = React.useState(false);
-  const [showIconConfirmPassword, setShowIconConfirmPassword] =
-    React.useState(false);
+  const [showConfirmPassword, setShowCornfirmPassword] = React.useState(false);
+  const [showIconPassword, setshowIconPassword] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-
   const [lowerValidated, setLowerValidated] = React.useState(false);
   const [upperValidated, setUpperValidated] = React.useState(false);
   const [numberValidated, setNumberValidated] = React.useState(false);
   const [specialValidated, setSpecialValidated] = React.useState(false);
   const [lengthValidated, setLengthValidated] = React.useState(false);
   const paramKey = getUrlParam().get("key");
-  const navigate = useNavigate;
-  const queryClient = useQueryClient;
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { isLoading, data: key } = useQueryData(
     `/v2/developer/key/${paramKey}`,
@@ -36,21 +50,29 @@ const DeveloperCreatePassword = () => {
     "developer/key"
   );
 
-  const mutation = {
+  const mutation = useMutation({
     mutationFn: (values) => queryData(`/v2/developer/password`, "post", values),
     onSuccess: (data) => {
-      QueryClient.invalidateQueries({
-        queries: ["developer"],
-      });
+      queryClient.invalidateQueries({ queries: ["developer"] });
 
       if (!data.success) {
-        dispatch(setCreatePassSuccess(false));
-        navigate(
-          `${devNavUrl}/create-password-success?redirect=/developer/login`
-        );
+        dispatch(setError(true));
+        dispatch(setMessage(data.error));
+      } else {
+        // if (store.isCreatePassSuccess) {
+        //   dispatch(setCreatePassSuccess(false));
+        //   navigate(
+        //     `${devNavUrl}/create-password-success?redirect=/developer/login`
+        //   );
+        // }
+        setSuccess(true);
       }
     },
-  };
+  });
+
+  const [showIconConfrimPassword, setshowConfirmIconPassword] =
+    React.useState(false);
+  React.useState(false);
 
   React.useEffect(() => {
     function setThemeColor() {
@@ -65,9 +87,9 @@ const DeveloperCreatePassword = () => {
 
   const handleChangePasswordInput = (e) => {
     if (e.target.value === "") {
-      setShowIconPassword(false);
+      setshowIconPassword(false);
     } else {
-      setShowIconPassword(true);
+      setshowIconPassword(true);
     }
 
     const lower = new RegExp("(?=.*[a-z])");
@@ -103,19 +125,19 @@ const DeveloperCreatePassword = () => {
     }
   };
 
-  const handleChangeConfirmPassword = (e) => {
+  const handleConfrimPasswordInput = (e) => {
     if (e.target.value === "") {
-      setShowIconPassword(false);
+      setshowConfirmIconPassword(false);
     } else {
-      setShowIconPassword(true);
+      setshowConfirmIconPassword(true);
     }
   };
 
   const initVal = {
-    password: "",
+    new_password: "",
     confirm_password: "",
+    key: paramKey,
   };
-
   const yupSchema = Yup.object({
     new_password: Yup.string()
       .required("Required")
@@ -130,54 +152,62 @@ const DeveloperCreatePassword = () => {
   });
 
   return (
-    <>
-      <main className="h-screen bg-primary bg-primary center-all">
-        <div className="login-main bg-secondary max-w-[320px] w-full p-4 border border-line rounded-md ">
-          <img
-            src={`${imgPath}/jollibee-logo.webp`}
-            alt=""
-            className="w-[200px] mx-auto mb-2"
-          />
+    <main className="h-screen bg-primary center-all">
+      <div className="login-main bg-secondary max-w-[320px] w-full p-4 border border-line rounded-md">
+        <img
+          src={`${imgPath}/jollibee-logo.webp`}
+          alt=""
+          className="w-[150px] mx-auto mb-2"
+        />
+        {success ? (
+          <div className="success-message mt-5">
+            <ShieldCheck size={50} stroke={"gray"} className="mx-auto" />
+            <p className="my-5 text-center">
+              Your password is ready ro use. Click the link to continue
+            </p>
+            <Link
+              to="/developer/login"
+              className="text-center block hover:text-accent"
+            >
+              Back to Login
+            </Link>
+          </div>
+        ) : isLoading ? (
+          <FetchingSpinner />
+        ) : key?.count === 0 || paramKey === null || paramKey === "" ? (
+          "Inavalid Page"
+        ) : (
+          <div>
+            <h5 className="text-center">Set New Password</h5>
 
-          {success ? (
-            <div className="success-message mt-5">
-              <ShieldCheck size={50} stroke={"green"} className="mx-auto" />
-              <p>
-                Your password is ready to use. Click the button below to
-                continue.
-              </p>
-            </div>
-          ) : (
             <Formik
               initialValues={initVal}
               validationSchema={yupSchema}
               onSubmit={async (values) => {
-                console.log(values);
+                mutation.mutate(values);
               }}
             >
               {(props) => {
                 return (
                   <Form>
-                    <h5 className="text-center">Set Password</h5>
-
                     <div className="input-wrap">
                       <InputText
                         label="New Password"
                         type={showPassword ? "text" : "password"}
                         className="!py-2"
-                        name="password"
+                        name="new_password"
                         onChange={(e) => handleChangePasswordInput(e)}
                       />
                       {showIconPassword && (
                         <button
                           className="absolute bottom-2.5 right-2"
-                          onClick={() => setShowConfirmPassword(!showPassword)}
+                          onClick={() => setShowPassword(!showPassword)}
                           type="button"
                         >
-                          {showConfirmPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
+                          {showPassword ? (
                             <Eye size={18} />
+                          ) : (
+                            <EyeOff size={18} />
                           )}
                         </button>
                       )}
@@ -185,108 +215,116 @@ const DeveloperCreatePassword = () => {
                     <div className="input-wrap">
                       <InputText
                         label="Confirm Password"
-                        type={showPassword ? "text" : "password"}
+                        type={showConfirmPassword ? "text" : "password"}
                         className="!py-2"
                         name="confirm_password"
-                        onChange={(e) => handleChangePasswordInput(e)}
+                        onChange={(e) => handleConfrimPasswordInput(e)}
                       />
-                      {showIconConfirmPassword && (
+                      {showIconConfrimPassword && (
                         <button
                           className="absolute bottom-2.5 right-2"
                           onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
+                            setShowCornfirmPassword(!showConfirmPassword)
                           }
                           type="button"
                         >
                           {showConfirmPassword ? (
-                            <EyeOff size={18} />
-                          ) : (
                             <Eye size={18} />
+                          ) : (
+                            <EyeOff size={18} />
                           )}
                         </button>
                       )}
                     </div>
-                    <ul className="space-y-3 mt-3">
+
+                    <ul className="space-y-4">
                       <li
                         className={`flex gap-2 items-center text-sm opacity-50 ${
-                          lengthValidated ? "opacity-100" : ""
-                        } `}
+                          lengthValidated ? "!opacity-100" : ""
+                        }`}
                       >
                         <CheckCircle2
                           size={16}
-                          stroke={lengthValidated ? "green" : "white"}
-                        />{" "}
-                        At least 8 character
+                          stroke={
+                            lengthValidated ? "green" : "rgba(255,255,255,0.7)"
+                          }
+                        />
+                        Atleast 8 Character
                       </li>
                       <li
                         className={`flex gap-2 items-center text-sm opacity-50 ${
-                          upperValidated ? "opacity-100" : ""
-                        } `}
+                          upperValidated ? "!opacity-100" : ""
+                        }`}
                       >
                         <CheckCircle2
                           size={16}
-                          stroke={upperValidated ? "green" : "white"}
-                        />{" "}
-                        At least 1 uppercase
+                          stroke={
+                            upperValidated ? "green" : "rgba(255,255,255,0.7)"
+                          }
+                        />
+                        Atleast 1 Uppercase
                       </li>
                       <li
                         className={`flex gap-2 items-center text-sm opacity-50 ${
-                          lowerValidated ? "opacity-100" : ""
-                        } `}
+                          lowerValidated ? "!opacity-100" : ""
+                        }`}
                       >
                         <CheckCircle2
                           size={16}
-                          stroke={lowerValidated ? "green" : "white"}
-                        />{" "}
-                        At least 1 lowercase
+                          stroke={
+                            lowerValidated ? "green" : "rgba(255,255,255,0.7)"
+                          }
+                        />
+                        Atleast 1 Lowercase
                       </li>
                       <li
                         className={`flex gap-2 items-center text-sm opacity-50 ${
-                          numberValidated ? "opacity-100" : ""
-                        } `}
+                          numberValidated ? "!opacity-100" : ""
+                        }`}
                       >
                         <CheckCircle2
                           size={16}
-                          stroke={numberValidated ? "green" : "white"}
-                        />{" "}
-                        At least 1 number
+                          stroke={
+                            numberValidated ? "green" : "rgba(255,255,255,0.7)"
+                          }
+                        />
+                        Atleast 1 Number
                       </li>
                       <li
                         className={`flex gap-2 items-center text-sm opacity-50 ${
-                          specialValidated ? "opacity-100" : ""
-                        } `}
+                          specialValidated ? "!opacity-100" : ""
+                        }`}
                       >
                         <CheckCircle2
                           size={16}
-                          stroke={specialValidated ? "green" : "white"}
-                        />{" "}
-                        At least 1 special character
+                          stroke={
+                            specialValidated ? "green" : "rgba(255,255,255,0.7)"
+                          }
+                        />
+                        Atleast 1 Special Character
                       </li>
                     </ul>
 
                     <button
                       className="btn btn-accent w-full center-all mt-5"
-                      onClick={() => setSuccess(true)}
-                      type="sumbit"
+                      // onClick={() => setSuccess(true)}
+                      type="submit"
+                      disabled={
+                        mutation.isPending ||
+                        props.values.new_password === "" ||
+                        props.values.confirm_password === ""
+                      }
                     >
-                      <SpinnerButton />
-                      Set Password
+                      {mutation.isPending ? <SpinnerButton /> : "Set Password"}
                     </button>
-
-                    <Link
-                      to="/developer/login"
-                      className="text-sm text-center block mt-5 hover:text-accent "
-                    >
-                      Go Back to Login
-                    </Link>
                   </Form>
                 );
               }}
             </Formik>
-          )}
-        </div>
-      </main>
-    </>
+          </div>
+        )}
+      </div>
+    </main>
   );
 };
 

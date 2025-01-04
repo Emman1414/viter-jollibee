@@ -1,10 +1,7 @@
 <?php
 
-
 class Developer
 {
-
-
     public $user_developer_aid;
     public $user_developer_is_active;
     public $user_developer_first_name;
@@ -19,6 +16,7 @@ class Developer
 
     public $connection;
     public $lastInsertedId;
+
     public $developer_start;
     public $developer_total;
     public $developer_search;
@@ -61,8 +59,8 @@ class Developer
                 "user_developer_email" => $this->user_developer_email,
                 "user_developer_role_id" => $this->user_developer_role_id,
                 "user_developer_key" => $this->user_developer_key,
-                "user_developer_created" => $this->user_developer_created,
                 "user_developer_datetime" => $this->user_developer_datetime,
+                "user_developer_created" => $this->user_developer_created,
 
             ]);
             $this->lastInsertedId = $this->connection->lastInsertId();
@@ -106,6 +104,87 @@ class Developer
         return $query;
     }
 
+    public function search()
+    {
+        try {
+            $sql = "select * from {$this->tblDeveloper} ";
+            $sql .= "where ";
+            $sql .= "user_developer_first_name like :user_developer_first_name ";
+            $sql .= "or user_developer_last_name like :user_developer_last_name ";
+            $sql .= "or user_developer_email like :user_developer_email ";
+            $sql .= "order by user_developer_is_active desc, ";
+            $sql .= "user_developer_first_name, ";
+            $sql .= "user_developer_last_name ";
+            $query = $this->connection->prepare($sql);
+            $query->execute([
+                "user_developer_first_name" => "%{$this->developer_search}%",
+                "user_developer_last_name" => "%{$this->developer_search}%",
+                "user_developer_email" => "%{$this->developer_search}%",
+            ]);
+        } catch (PDOException $ex) {
+            $query = false;
+        }
+        return $query;
+    }
+
+    public function filterActive()
+    {
+        try {
+            $sql = "select ";
+            $sql .= "dev.*, ";
+            $sql .= "role.* ";
+            $sql .= "from {$this->tblDeveloper} as dev, ";
+            $sql .= "{$this->tblRole} as role ";
+            $sql .= "where ";
+            $sql .= "dev.user_developer_role_id = role.role_aid ";
+            $sql .= "and dev.user_developer_is_active = :user_developer_is_active ";
+            $sql .= "order by dev.user_developer_is_active desc, ";
+            $sql .= "dev.user_developer_first_name, ";
+            $sql .= "dev.user_developer_last_name ";
+            $query = $this->connection->prepare($sql);
+            $query->execute([
+                "user_developer_is_active" => $this->user_developer_is_active,
+            ]);
+        } catch (PDOException $ex) {
+            $query = false;
+        }
+        return $query;
+    }
+
+    public function filterActiveSearch()
+    {
+        try {
+            $sql = "select ";
+            $sql .= "dev.*, ";
+            $sql .= "role.* ";
+            $sql .= "from {$this->tblDeveloper} as dev, ";
+            $sql .= "{$this->tblRole} as role ";
+            $sql .= "where ";
+            $sql .= "dev.user_developer_role_id = role.role_aid ";
+            $sql .= "and dev.user_developer_is_active = :user_developer_is_active ";
+            $sql .= "and ";
+            $sql .= " ( ";
+            $sql .= "dev.user_developer_first_name like :user_developer_first_name ";
+            $sql .= "or dev.user_developer_last_name like :user_developer_last_name ";
+            $sql .= "or dev.user_developer_email like :user_developer_email ";
+            $sql .= " ) ";
+            $sql .= "order by dev.user_developer_is_active desc, ";
+            $sql .= "dev.user_developer_first_name, ";
+            $sql .= "dev.user_developer_last_name ";
+            $query = $this->connection->prepare($sql);
+            $query->execute([
+                "user_developer_is_active" => $this->user_developer_is_active,
+                "user_developer_first_name" => "%{$this->developer_search}%",
+                "user_developer_last_name" => "%{$this->developer_search}%",
+                "user_developer_email" => "%{$this->developer_search}%",
+            ]);
+        } catch (PDOException $ex) {
+            $query = false;
+        }
+        return $query;
+    }
+
+
     public function readById()
     {
         try {
@@ -119,7 +198,7 @@ class Developer
             $sql .= "and dev.user_developer_aid = :user_developer_aid ";
             $query = $this->connection->prepare($sql);
             $query->execute([
-                "user_developer_aid" => $this->user_developer_aid,
+                "user_developer_aid " => $this->user_developer_aid,
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -184,89 +263,7 @@ class Developer
             $sql .= "and dev.user_developer_key = :user_developer_key ";
             $query = $this->connection->prepare($sql);
             $query->execute([
-                "user_developer_key" => $this->user_developer_key,
-            ]);
-        } catch (PDOException $ex) {
-            $query = false;
-        }
-        return $query;
-    }
-
-    public function search()
-    {
-        try {
-            $sql = "select * from {$this->tblDeveloper} ";
-            $sql .= "where ";
-            $sql .= "user_developer_first_name like :user_developer_first_name ";
-            $sql .= "or user_developer_last_name like :user_developer_last_name ";
-            $sql .= "or user_developer_email like :user_developer_email ";
-            $sql .= "order by user_developer_is_active desc, ";
-            $sql .= "user_developer_first_name, ";
-            $sql .= "user_developer_last_name ";
-            $query = $this->connection->prepare($sql);
-            $query->execute([
-                "user_developer_first_name" => "%{$this->developer_search}%",
-                "user_developer_last_name" => "%{$this->developer_search}%",
-                "user_developer_email" => "%{$this->developer_search}%",
-            ]);
-        } catch (PDOException $ex) {
-            $query = false;
-        }
-        return $query;
-    }
-
-    public function filterActive()
-    {
-        try {
-            $sql = "select ";
-            $sql .= "dev.*, ";
-            $sql .= "role.* ";
-            $sql .= "from {$this->tblDeveloper} as dev, ";
-            $sql .= "{$this->tblRole} as role ";
-            $sql .= "where ";
-            $sql .= "dev.user_developer_role_id = role.role_aid ";
-            $sql .= "and dev.user_developer_is_active = :user_developer_is_active ";
-            $sql .= "order by dev.user_developer_is_active desc, ";
-            $sql .= "dev.user_developer_first_name, ";
-            $sql .= "dev.user_developer_last_name ";
-            $query = $this->connection->prepare($sql);
-            $query->execute([
-                "user_developer_is_active" => $this->user_developer_is_active,
-            ]);
-        } catch (PDOException $ex) {
-            $query = false;
-        }
-        return $query;
-    }
-
-
-
-    public function filterActiveSearch()
-    {
-        try {
-            $sql = "select ";
-            $sql .= "dev.*, ";
-            $sql .= "role.* ";
-            $sql .= "from {$this->tblDeveloper} as dev, ";
-            $sql .= "{$this->tblRole} as role ";
-            $sql .= "where ";
-            $sql .= "dev.user_developer_role_id = role.role_aid ";
-            $sql .= "and dev.user_developer_is_active = :user_developer_is_active ";
-            $sql .= "and ";
-            $sql .= " ( ";
-            $sql .= "dev.user_developer_first_name like :user_developer_first_name ";
-            $sql .= "or dev.user_developer_last_name like :user_developer_last_name ";
-            $sql .= "or dev.user_developer_email like :user_developer_email ";
-            $sql .= " ) ";
-            $sql .= "order by dev.user_developer_is_active desc, ";
-            $sql .= "dev.user_developer_first_name, ";
-            $sql .= "dev.user_developer_last_name ";
-            $query = $this->connection->prepare($sql);
-            $query->execute([
-                "user_developer_is_active" => $this->user_developer_is_active,
-                "user_developer_first_name" => "%{$this->developer_search}%",
-                "user_developer_last_name" => "%{$this->developer_search}%",
-                "user_developer_email" => "%{$this->developer_search}%",
+                "user_developer_key " => $this->user_developer_key,
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -281,13 +278,13 @@ class Developer
             $sql .= "user_developer_first_name = :user_developer_first_name, ";
             $sql .= "user_developer_last_name = :user_developer_last_name, ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
-            $sql .= "where user_developer_aid  = :user_developer_aid ";
+            $sql .= "where user_developer_aid   = :user_developer_aid  ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_first_name" => $this->user_developer_first_name,
                 "user_developer_last_name" => $this->user_developer_last_name,
                 "user_developer_datetime" => $this->user_developer_datetime,
-                "user_developer_aid" => $this->user_developer_aid
+                "user_developer_aid " => $this->user_developer_aid
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -303,12 +300,12 @@ class Developer
             $sql .= "user_developer_new_email = '' ";
             $sql .= "user_developer_key = '' ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
-            $sql .= "where user_developer_key = :user_developer_key ";
+            $sql .= "where user_developer_key   = :user_developer_key  ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_email" => $this->user_developer_email,
                 "user_developer_datetime" => $this->user_developer_datetime,
-                "user_developer_key" => $this->user_developer_key
+                "user_developer_key " => $this->user_developer_key
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -316,20 +313,20 @@ class Developer
         return $query;
     }
 
-    public function updateUserKeyAndNewEmail()
+    public function updateKeyAndNewEmail()
     {
         try {
             $sql = "update {$this->tblDeveloper} set ";
             $sql .= "user_developer_key = :user_developer_key, ";
             $sql .= "user_developer_new_email = :user_developer_new_email ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
-            $sql .= "where user_developer_aid = :user_developer_aid ";
+            $sql .= "where user_developer_aid    = :user_developer_aid   ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_key" => $this->user_developer_key,
                 "user_developer_new_email" => $this->user_developer_new_email,
                 "user_developer_datetime" => $this->user_developer_datetime,
-                "user_developer_key" => $this->user_developer_key
+                "user_developer_aid  " => $this->user_developer_aid
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -342,14 +339,15 @@ class Developer
         try {
             $sql = "update {$this->tblDeveloper} set ";
             $sql .= "user_developer_password = :user_developer_password, ";
-            $sql .= "user_developer_key = '' ";
+            $sql .= "user_developer_key = '', ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
             $sql .= "where user_developer_key = :user_developer_key ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_password" => $this->user_developer_password,
                 "user_developer_datetime" => $this->user_developer_datetime,
-                "user_developer_key" => $this->user_developer_key
+                "user_developer_key" => $this->user_developer_key,
+
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -363,12 +361,13 @@ class Developer
             $sql = "update {$this->tblDeveloper} set ";
             $sql .= "user_developer_key = :user_developer_key, ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
-            $sql .= "where user_developer_email = :user_developer_email ";
+            $sql .= "where user_developer_email    = :user_developer_email   ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_key" => $this->user_developer_key,
                 "user_developer_datetime" => $this->user_developer_datetime,
                 "user_developer_email" => $this->user_developer_email,
+
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -382,12 +381,12 @@ class Developer
             $sql = "update {$this->tblDeveloper} set ";
             $sql .= "user_developer_is_active = :user_developer_is_active, ";
             $sql .= "user_developer_datetime = :user_developer_datetime ";
-            $sql .= "where user_developer_aid  = :user_developer_aid ";
+            $sql .= "where user_developer_aid   = :user_developer_aid  ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_is_active" => $this->user_developer_is_active,
                 "user_developer_datetime" => $this->user_developer_datetime,
-                "user_developer_aid" => $this->user_developer_aid,
+                "user_developer_aid " => $this->user_developer_aid,
             ]);
         } catch (PDOException $ex) {
             $query = false;
@@ -399,7 +398,7 @@ class Developer
     {
         try {
             $sql = "select user_developer_email from {$this->tblDeveloper} ";
-            // $sql .= "where user_developer_new_email = :user_developer_new_email ";
+            $sql .= "where user_developer_email = :user_developer_email ";
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "user_developer_email" => "{$this->user_developer_email}",

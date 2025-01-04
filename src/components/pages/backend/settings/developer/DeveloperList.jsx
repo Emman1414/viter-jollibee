@@ -23,17 +23,20 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
 import Status from "@/components/partials/Status";
 import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
+import ModalConfirm from "../../partials/modals/ModalConfirm";
 import LoadMore from "../../partials/LoadMore";
 
 const DeveloperList = ({ setItemEdit }) => {
-  const [id, setIsId] = React.useState("");
   const { store, dispatch } = React.useContext(StoreContext);
+  const [id, setIsId] = React.useState("");
   const [isFilter, setIsFilter] = React.useState(false);
   const [onSearch, setOnSearch] = React.useState(false);
-  const [statusFilter, setStatusFilter] = React.useState("");
   const search = React.useRef({ value: "" });
+  const [statusFilter, setStatusFilter] = React.useState("");
   const [page, setPage] = React.useState(1);
   const { ref, inView } = useInView; // need installation
+
+  const [dataItem, setIsDataItem] = React.useState(null);
 
   const {
     data: result,
@@ -45,7 +48,7 @@ const DeveloperList = ({ setItemEdit }) => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["Developer", onSearch, isFilter, statusFilter],
+    queryKey: ["developer", onSearch, isFilter, statusFilter],
     queryFn: async ({ pageParam = 1 }) =>
       await queryDataInfinite(
         "/v2/developer/search",
@@ -82,6 +85,7 @@ const DeveloperList = ({ setItemEdit }) => {
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
     setIsId(item.Developer_aid);
+    setIsDataItem(item);
   };
 
   const handleArchive = (item) => {
@@ -120,7 +124,7 @@ const DeveloperList = ({ setItemEdit }) => {
                 <th>#</th>
                 <th>Status</th>
                 <th>Developer Name</th>
-                <th>Description</th>
+                <th>Email</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -161,7 +165,8 @@ const DeveloperList = ({ setItemEdit }) => {
                             <Status text={"Inactive"} />
                           )}
                         </td>
-                        <td>{item.user_developer_is_first_name}</td>
+                        <td>{`${item.user_developer_first_name} ${item.user_developer_last_name}`}</td>
+                        <td>{item.user_developer_email}</td>
                         <td
                           colSpan="100%"
                           className="opacity-0 group-hover:opacity-100"
@@ -254,6 +259,8 @@ const DeveloperList = ({ setItemEdit }) => {
             queryKey={"developer"}
           />
         )}
+
+        {store.isConfirm && <ModalConfirm/>}
       </div>
     </>
   );

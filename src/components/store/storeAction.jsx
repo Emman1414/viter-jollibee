@@ -40,13 +40,6 @@ export const setSave = (val) => {
   };
 };
 
-export const setCreatePassSuccess = (val) => {
-  return {
-    type: "IS_CREATE_PASS_SUCCESS",
-    payload: val,
-  };
-};
-
 export const setIsDelete = (val) => {
   return {
     type: "IS_DELETE",
@@ -57,6 +50,34 @@ export const setIsDelete = (val) => {
 export const setIsConfirm = (val) => {
   return {
     type: "CONFIRM",
+    payload: val,
+  };
+};
+
+export const setIsAccountUpdates = (val) => {
+  return {
+    type: "IS_ACCOUNT_UPDATED",
+    payload: val,
+  };
+};
+
+export const setIsLogin = (val) => {
+  return {
+    type: "IS_LOGIN",
+    payload: val,
+  };
+};
+
+export const setIsLogout = (val) => {
+  return {
+    type: "IS_LOGOUT",
+    payload: val,
+  };
+};
+
+export const setCredentials = (val) => {
+  return {
+    type: "CREDENTIALS",
     payload: val,
   };
 };
@@ -84,6 +105,12 @@ export const setIsEdit = (val) => {
 export const setIsAdd = (val) => {
   return {
     type: "IS_ADD",
+    payload: val,
+  };
+};
+export const setCreatePassSuccess = (val) => {
+  return {
+    type: "IS_CREATE_PASS_SUCCESS",
     payload: val,
   };
 };

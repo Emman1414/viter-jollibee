@@ -1,12 +1,11 @@
 <?php
 // set http header
-require '../../../../core/header.php';
+require '../../../../../core/header.php';
 // use needed functions
-require '../../../../core/functions.php';
+require '../../../../../core/functions.php';
 // require 'functions.php';
 // use needed classes
-require '../../../../../models/settings/users/developer/Developer.php';
-
+require '../../../../../models/developer/settings/user/developer/Developer.php';
 
 // check database connection
 $conn = null;
@@ -22,7 +21,7 @@ if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         // get data
         // get task id from query string
         $developer->developer_start = $_GET['start'];
-        $developer->developer_total = 11;
+        $developer->developer_total = 1;
         //check to see if task id in query string is not empty and is number, if not return json error
         checkLimitId($developer->developer_start, $developer->developer_total);
 
