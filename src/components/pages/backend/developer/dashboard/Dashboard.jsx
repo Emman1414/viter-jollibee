@@ -10,7 +10,6 @@ import {
   YAxis,
 } from "recharts";
 import Footer from "../partials/Footer";
-import Header from "../partials/Header";
 import SideNavigation from "../partials/SideNavigation";
 import DashboardAccordion from "./DashboardAccordion";
 import DashboardCard from "./DashboardCard";
@@ -20,6 +19,7 @@ import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
 import TableLoader from "@/components/partials/TableLoader";
 import IconNoData from "../partials/IconNoData";
 import { getCategoryPrices } from "./function";
+import Header from "../../partials/Header";
 
 const Dashboard = () => {
   const {
