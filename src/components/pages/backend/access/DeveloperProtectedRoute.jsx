@@ -20,7 +20,7 @@ const DeveloperProtectedRoute = ({ children }) => {
         token: jollibeetoken.token,
       });
 
-      if (typeof login === "indefined" || !login.success) {
+      if (typeof login === "undefined" || !login.success) {
         setLoading(false);
         setIsAuth("456");
       } else {

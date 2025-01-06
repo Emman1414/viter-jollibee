@@ -10,7 +10,7 @@ const SettingList = () => {
     },
     {
       title: "Developer",
-      slug: "/developer/settings/developer",
+      slug: "/admin/settings/developer",
       icon: <FaDev size={16} />,
     },
     {

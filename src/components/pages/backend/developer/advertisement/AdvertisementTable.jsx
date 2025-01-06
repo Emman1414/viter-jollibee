@@ -1,8 +1,6 @@
-import useQueryData from "@/components/custom-hook/useQueryData";
-import Loadmore from "@/components/partials/LoadMore";
-import ModalDelete from "@/components/partials/modal/ModalDelete";
 import ModalRestore from "@/components/partials/modal/ModalRestore";
-import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
+import Status from "@/components/partials/Status";
 import TableLoader from "@/components/partials/TableLoader";
 import {
   setIsAdd,
@@ -11,32 +9,30 @@ import {
   setIsRestore,
 } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
-import IconNoData from "../../partials/IconNoData";
-import IconServerError from "../../partials/IconServerError";
-import ModalArchive from "../../partials/modals/ModalArchive";
-import Pills from "../../partials/Pills";
 import { useInView } from "react-intersection-observer";
-import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import ModalArchive from "../partials/modals/ModalArchive";
 import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
-import Status from "@/components/partials/Status";
+import Loadmore from "@/components/partials/LoadMore";
 import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
-import ModalConfirm from "../../partials/modals/ModalConfirm";
-import LoadMore from "../../partials/LoadMore";
+import ModalDelete from "@/components/partials/modal/ModalDelete";
 
-const DeveloperList = ({ setItemEdit }) => {
+const AdvertisementTable = ({setItemEdit}) => {
   const { store, dispatch } = React.useContext(StoreContext);
   const [id, setIsId] = React.useState("");
   const [isFilter, setIsFilter] = React.useState(false);
   const [onSearch, setOnSearch] = React.useState(false);
-  const search = React.useRef({ value: "" });
   const [statusFilter, setStatusFilter] = React.useState("");
+  const search = React.useRef({ value: "" });
   const [page, setPage] = React.useState(1);
-  const { ref, inView } = useInView; // need installation
+  const { ref, inView } = useInView();
 
-  const [dataItem, setIsDataItem] = React.useState(null);
+  const queryClient = useQueryClient();
+
+  let counter = 1;
 
   const {
     data: result,
@@ -44,15 +40,14 @@ const DeveloperList = ({ setItemEdit }) => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-    isLoading,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["developer", onSearch, isFilter, statusFilter],
+    queryKey: ["advertisement", onSearch, isFilter, statusFilter],
     queryFn: async ({ pageParam = 1 }) =>
       await queryDataInfinite(
-        "/v2/developer/search",
-        `/v2/developer/page/${pageParam}`,
+        "/v2/advertisement/search",
+        `/v2/advertisement/page/${pageParam}`,
         isFilter || store.isSearch,
         {
           isFilter,
@@ -77,6 +72,8 @@ const DeveloperList = ({ setItemEdit }) => {
     }
   }, [inView]);
 
+  // handle
+
   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
     setItemEdit(item);
@@ -84,21 +81,20 @@ const DeveloperList = ({ setItemEdit }) => {
 
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
-    setIsId(item.developer_aid);
-    setIsDataItem(item);
-  };
-
-  const handleArchive = (item) => {
-    dispatch(setIsArchive(true));
-    setIsId(item.developer_aid);
+    setIsId(item.ads_aid);
   };
 
   const handleRestore = (item) => {
     dispatch(setIsRestore(true));
-    setIsId(item.developer_aid);
+    setIsId(item.ads_aid);
   };
 
-  let counter = 1;
+  const handleArchive = (item) => {
+    dispatch(setIsArchive(true));
+    setIsId(item.ads_aid);
+  };
+
+
   return (
     <>
       <div className="mt-5">
@@ -116,16 +112,15 @@ const DeveloperList = ({ setItemEdit }) => {
           setPage={setPage}
         />
       </div>
-      <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
+      <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative m-4">
+        {/* {isFetchings && !isLoading && <FetchingSpinner />} */}
         <div className="table-wrapper custom-scroll">
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Status</th>
-                <th>Developer Name</th>
-                <th>Email</th>
-                <th></th>
+                <th>Title</th>
                 <th></th>
               </tr>
             </thead>
@@ -158,21 +153,20 @@ const DeveloperList = ({ setItemEdit }) => {
                     return (
                       <tr key={key} className="group relative cursor-pointer">
                         <td className="text-center">{counter++}.</td>
-                        <td>
-                          {item.user_developer_is_active ? (
+                      <td>
+                          {item.ads_is_active ? (
                             <Status text={"Active"} />
                           ) : (
                             <Status text={"Inactive"} />
                           )}
                         </td>
-                        <td>{`${item.user_developer_first_name} ${item.user_developer_last_name}`}</td>
-                        <td>{item.user_developer_email}</td>
+                        <td>{item.ads_title}</td>
                         <td
                           colSpan="100%"
                           className="opacity-0 group-hover:opacity-100"
                         >
                           <div className="flex items-center justify-end gap-3 mr-4">
-                            {item.user_developer_is_active == 1 ? (
+                            {item.ads_is_active == 1 ? (
                               <>
                                 <button
                                   type="button"
@@ -226,7 +220,7 @@ const DeveloperList = ({ setItemEdit }) => {
           </table>
 
           <div className="pb-10 text-center flex items-center ">
-            <LoadMore
+            <Loadmore
               fetchNextPage={fetchNextPage}
               isFetchingNextPage={isFetchingNextPage}
               hasNextPage={hasNextPage}
@@ -237,33 +231,31 @@ const DeveloperList = ({ setItemEdit }) => {
             />
           </div>
         </div>
-        {store.isDelete && (
-          <ModalDelete
-            setIsDelete={setIsDelete}
-            mysqlApiDelete={`/v2/developer/${id}`}
-            queryKey={"developer"}
-            item={dataItem.developer_name}
-          />
-        )}
-        {store.isArchive && (
-          <ModalArchive
-            setIsArchive={setIsArchive}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-        {store.isRestore && (
-          <ModalRestore
-            setIsRestore={setIsRestore}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-
-        {store.isConfirm && <ModalConfirm />}
       </div>
+
+      {store.isDelete && (
+        <ModalDelete
+          setIsDelete={setIsDelete}
+          mysqlApiDelete={`/v2/advertisement/${id}`}
+          queryKey={"advertisement"}
+        />
+      )}
+      {store.isArchive && (
+        <ModalArchive
+          setIsArchive={setIsArchive}
+          mysqlEndpoint={`/v2/advertisement/active/${id}`}
+          queryKey={"advertisement"}
+        />
+      )}
+      {store.isRestore && (
+        <ModalRestore
+          setIsRestore={setIsRestore}
+          mysqlEndpoint={`/v2/advertisement/active/${id}`}
+          queryKey={"advertisement"}
+        />
+      )}
     </>
   );
 };
 
-export default DeveloperList;
+export default AdvertisementTable;

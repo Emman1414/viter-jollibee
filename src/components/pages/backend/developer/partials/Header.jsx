@@ -1,11 +1,8 @@
-import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
-import { LogOut, LogOutIcon, Moon, Settings, Sun } from "lucide-react";
+import { Moon, Settings, Sun } from "lucide-react";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header = ({ title = "", subtitle = "" }) => {
-  const [isLoading, setIsLoading] = React.useState(false);
-    const navigate = useNavigate();
   const [isDark, setIsDark] = React.useState(
     localStorage.getItem("theme") === "dark" ? true : false
   );
@@ -34,16 +31,15 @@ const Header = ({ title = "", subtitle = "" }) => {
   }, [theme]);
 
   return (
-    <>
-      {isLoading && <FetchingSpinner />}
-      <header>
-        <div className="flex justify-between items-center p-4">
-          <div className="[&>*]:mb-0 ">
-            <h4>{title}</h4>
-            <p>{subtitle}</p>
-          </div>
+    <header>
+      <div className="flex justify-between items-center p-4">
+        <div className="[&>*]:mb-0 ">
+          <h4>{title}</h4>
+          <p>{subtitle}</p>
+        </div>
 
-          <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6">
+          <span>
             <button
               className="h-[20px] w-[45px] bg-primary rounded-2xl border border-line px-[2px] transition-all duration-500"
               onClick={handleTheme}
@@ -60,30 +56,14 @@ const Header = ({ title = "", subtitle = "" }) => {
                 )}
               </span>
             </button>
-            <Link to="/developer/setings">
-              <Settings />
-            </Link>
-            <button
-              type="button"
-              onClick={() => {
-                setIsLoading(true);
-                setTimeout(() => {
-                  localStorage.removeItem("jollibeetoken");
-                  navigate("/developer/login")
-                  setIsLoading(false);
-                }, [3000]);
-              }}
-            >
-              <LogOutIcon />
-            </button>
+          </span>
 
-            <button className="size-[30px] rounded-full bg-accent grid place-content-center text-white">
-              ED
-            </button>
-          </div>
+          <button className="size-[30px] rounded-full bg-accent grid place-content-center text-white">
+            ED
+          </button>
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 };
 

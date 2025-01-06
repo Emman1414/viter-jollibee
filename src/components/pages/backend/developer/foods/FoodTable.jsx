@@ -1,8 +1,8 @@
-import useQueryData from "@/components/custom-hook/useQueryData";
 import Loadmore from "@/components/partials/LoadMore";
 import ModalDelete from "@/components/partials/modal/ModalDelete";
 import ModalRestore from "@/components/partials/modal/ModalRestore";
-import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
+import Status from "@/components/partials/Status";
 import TableLoader from "@/components/partials/TableLoader";
 import {
   setIsAdd,
@@ -11,32 +11,24 @@ import {
   setIsRestore,
 } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
-import React from "react";
-import IconNoData from "../../partials/IconNoData";
-import IconServerError from "../../partials/IconServerError";
-import ModalArchive from "../../partials/modals/ModalArchive";
-import Pills from "../../partials/Pills";
-import { useInView } from "react-intersection-observer";
-import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
-import Status from "@/components/partials/Status";
+import React from "react";
 import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
-import ModalConfirm from "../../partials/modals/ModalConfirm";
-import LoadMore from "../../partials/LoadMore";
+import { useInView } from "react-intersection-observer";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import ModalConfirm from "../partials/modals/ModalConfirm";
+import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
 
-const DeveloperList = ({ setItemEdit }) => {
-  const { store, dispatch } = React.useContext(StoreContext);
+const FoodTable = ({ setItemEdit }) => {
   const [id, setIsId] = React.useState("");
+  const { store, dispatch } = React.useContext(StoreContext);
   const [isFilter, setIsFilter] = React.useState(false);
   const [onSearch, setOnSearch] = React.useState(false);
-  const search = React.useRef({ value: "" });
   const [statusFilter, setStatusFilter] = React.useState("");
+  const search = React.useRef({ value: "" });
   const [page, setPage] = React.useState(1);
   const { ref, inView } = useInView; // need installation
-
-  const [dataItem, setIsDataItem] = React.useState(null);
 
   const {
     data: result,
@@ -44,15 +36,14 @@ const DeveloperList = ({ setItemEdit }) => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-    isLoading,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["developer", onSearch, isFilter, statusFilter],
+    queryKey: ["food", onSearch, isFilter, statusFilter],
     queryFn: async ({ pageParam = 1 }) =>
       await queryDataInfinite(
-        "/v2/developer/search",
-        `/v2/developer/page/${pageParam}`,
+        "/v2/food/search",
+        `/v2/food/page/${pageParam}`,
         isFilter || store.isSearch,
         {
           isFilter,
@@ -84,24 +75,24 @@ const DeveloperList = ({ setItemEdit }) => {
 
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
-    setIsId(item.developer_aid);
-    setIsDataItem(item);
+    setIsId(item.food_aid);
   };
 
   const handleArchive = (item) => {
     dispatch(setIsArchive(true));
-    setIsId(item.developer_aid);
+    setIsId(item.food_aid);
   };
 
   const handleRestore = (item) => {
     dispatch(setIsRestore(true));
-    setIsId(item.developer_aid);
+    setIsId(item.food_aid);
   };
 
   let counter = 1;
+
   return (
     <>
-      <div className="mt-5">
+      <div className="mt-5 m-4">
         <SearchBarWithFilterStatus
           search={search}
           dispatch={dispatch}
@@ -116,16 +107,18 @@ const DeveloperList = ({ setItemEdit }) => {
           setPage={setPage}
         />
       </div>
-      <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
+      <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative m-2">
+        {/* {isFetching && !isLoadings && <FetchingSpinner />} */}
         <div className="table-wrapper custom-scroll">
+          {/* <TableLoader count={10} cols={4} /> */}
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Status</th>
-                <th>Developer Name</th>
-                <th>Email</th>
-                <th></th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
                 <th></th>
               </tr>
             </thead>
@@ -159,20 +152,21 @@ const DeveloperList = ({ setItemEdit }) => {
                       <tr key={key} className="group relative cursor-pointer">
                         <td className="text-center">{counter++}.</td>
                         <td>
-                          {item.user_developer_is_active ? (
+                          {item.food_is_active ? (
                             <Status text={"Active"} />
                           ) : (
                             <Status text={"Inactive"} />
                           )}
                         </td>
-                        <td>{`${item.user_developer_first_name} ${item.user_developer_last_name}`}</td>
-                        <td>{item.user_developer_email}</td>
+                        <td>{item.food_title}</td>
+                        <td>{item.food_price}</td>
+                        <td>{item.category_title}</td>
                         <td
                           colSpan="100%"
                           className="opacity-0 group-hover:opacity-100"
                         >
                           <div className="flex items-center justify-end gap-3 mr-4">
-                            {item.user_developer_is_active == 1 ? (
+                            {item.food_is_active == 1 ? (
                               <>
                                 <button
                                   type="button"
@@ -226,7 +220,7 @@ const DeveloperList = ({ setItemEdit }) => {
           </table>
 
           <div className="pb-10 text-center flex items-center ">
-            <LoadMore
+            <Loadmore
               fetchNextPage={fetchNextPage}
               isFetchingNextPage={isFetchingNextPage}
               hasNextPage={hasNextPage}
@@ -237,33 +231,30 @@ const DeveloperList = ({ setItemEdit }) => {
             />
           </div>
         </div>
-        {store.isDelete && (
-          <ModalDelete
-            setIsDelete={setIsDelete}
-            mysqlApiDelete={`/v2/developer/${id}`}
-            queryKey={"developer"}
-            item={dataItem.developer_name}
-          />
-        )}
-        {store.isArchive && (
-          <ModalArchive
-            setIsArchive={setIsArchive}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-        {store.isRestore && (
-          <ModalRestore
-            setIsRestore={setIsRestore}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-
-        {store.isConfirm && <ModalConfirm />}
       </div>
+      {store.isDelete && (
+        <ModalDelete
+          setIsDelete={setIsDelete}
+          mysqlApiDelete={`/v2/food/${id}`}
+          queryKey={"food"}
+        />
+      )}
+      {store.isArchive && (
+        <ModalConfirm
+          setIsArchive={setIsArchive}
+          mysqlEndpoint={`/v2/food/active/${id}`}
+          queryKey={"food"}
+        />
+      )}
+      {store.isRestore && (
+        <ModalRestore
+          setIsRestore={setIsRestore}
+          mysqlEndpoint={`/v2/food/active/${id}`}
+          queryKey={"food"}
+        />
+      )}
     </>
   );
 };
 
-export default DeveloperList;
+export default FoodTable;

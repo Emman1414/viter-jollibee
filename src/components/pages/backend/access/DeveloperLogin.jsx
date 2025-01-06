@@ -41,9 +41,9 @@ const DeveloperLogin = () => {
       if (!data.success) {
         dispatch(setError(true));
         dispatch(setMessage(data.error));
-        dispatch(setSuccess(false));
       } else {
         if (store.isLogin) {
+          console.log(data);
           delete data.data[0].user_developer_password;
           delete data.data[0].role_description;
           delete data.data[0].role_created;

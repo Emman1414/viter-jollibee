@@ -1,8 +1,9 @@
-import useQueryData from "@/components/custom-hook/useQueryData";
-import Loadmore from "@/components/partials/LoadMore";
+import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
 import ModalDelete from "@/components/partials/modal/ModalDelete";
 import ModalRestore from "@/components/partials/modal/ModalRestore";
-import FetchingSpinner from "@/components/partials/spinner/FetchingSpinner";
+import ModalArchive from "../partials/modals/ModalArchive";
+import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
+import Status from "@/components/partials/Status";
 import TableLoader from "@/components/partials/TableLoader";
 import {
   setIsAdd,
@@ -11,32 +12,40 @@ import {
   setIsRestore,
 } from "@/components/store/storeAction";
 import { StoreContext } from "@/components/store/storeContext";
-import { Archive, ArchiveRestore, FilePenLine, Trash2 } from "lucide-react";
-import React from "react";
-import IconNoData from "../../partials/IconNoData";
-import IconServerError from "../../partials/IconServerError";
-import ModalArchive from "../../partials/modals/ModalArchive";
-import Pills from "../../partials/Pills";
-import { useInView } from "react-intersection-observer";
-import SearchBarWithFilterStatus from "@/components/partials/SearchBarWithFilterStatus";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { queryDataInfinite } from "@/components/helpers/queryDataInfinite";
-import Status from "@/components/partials/Status";
-import { FaArchive, FaEdit, FaTrash, FaTrashRestoreAlt } from "react-icons/fa";
-import ModalConfirm from "../../partials/modals/ModalConfirm";
-import LoadMore from "../../partials/LoadMore";
+import React from "react";
+import {
+  FaArchive,
+  FaEdit,
+  FaTrash,
+  FaTrashRestoreAlt
+} from "react-icons/fa";
+import { useInView } from "react-intersection-observer";
+import IconNoData from "../partials/IconNoData";
+import IconServerError from "../partials/IconServerError";
+import Loadmore from "@/components/partials/LoadMore";
 
-const DeveloperList = ({ setItemEdit }) => {
-  const { store, dispatch } = React.useContext(StoreContext);
+const CategoryTable = ({ setIsCategoryEdit }) => {
   const [id, setIsId] = React.useState("");
+  const { store, dispatch } = React.useContext(StoreContext);
   const [isFilter, setIsFilter] = React.useState(false);
   const [onSearch, setOnSearch] = React.useState(false);
-  const search = React.useRef({ value: "" });
   const [statusFilter, setStatusFilter] = React.useState("");
+  const search = React.useRef({ value: "" });
   const [page, setPage] = React.useState(1);
-  const { ref, inView } = useInView; // need installation
+  const { ref, inView } = useInView(); // need installation
 
-  const [dataItem, setIsDataItem] = React.useState(null);
+  let counter = 1;
+
+  // const { data: result, error, fetchNextPage, hasNextPage, isFecthing, isFetchingNextPage, status } = useInfiniteQuery({
+  //   querkey: ['category-list'],
+  //   queryFn: async ({ pageParam = 1 }) =>
+  //     await queryDataInfinite(
+  //       store.isSearch ? "" : "", isFilter || store.isSearch, { searchValue: search?.current.value, id: "", }), getPreviousPageParam: (lastPage) => {
+  //     if (lastPage.page < lastPage.total) {
+  //       return lastPage.page + lastPage.count;
+  //   }
+  // }, })
 
   const {
     data: result,
@@ -44,15 +53,14 @@ const DeveloperList = ({ setItemEdit }) => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-    isLoading,
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["developer", onSearch, isFilter, statusFilter],
+    queryKey: ["category", onSearch, isFilter, statusFilter],
     queryFn: async ({ pageParam = 1 }) =>
       await queryDataInfinite(
-        "/v2/developer/search",
-        `/v2/developer/page/${pageParam}`,
+        "/v2/category/search",
+        `/v2/category/page/${pageParam}`,
         isFilter || store.isSearch,
         {
           isFilter,
@@ -77,28 +85,28 @@ const DeveloperList = ({ setItemEdit }) => {
     }
   }, [inView]);
 
+  // handle
+
   const handleEdit = (item) => {
     dispatch(setIsAdd(true));
-    setItemEdit(item);
+    setIsCategoryEdit(item);
   };
 
   const handleDelete = (item) => {
     dispatch(setIsDelete(true));
-    setIsId(item.developer_aid);
-    setIsDataItem(item);
-  };
-
-  const handleArchive = (item) => {
-    dispatch(setIsArchive(true));
-    setIsId(item.developer_aid);
+    setIsId(item.category_aid);
   };
 
   const handleRestore = (item) => {
     dispatch(setIsRestore(true));
-    setIsId(item.developer_aid);
+    setIsId(item.category_aid);
   };
 
-  let counter = 1;
+  const handleArchive = (item) => {
+    dispatch(setIsArchive(true));
+    setIsId(item.category_aid);
+  };
+
   return (
     <>
       <div className="mt-5">
@@ -117,15 +125,14 @@ const DeveloperList = ({ setItemEdit }) => {
         />
       </div>
       <div className="p-4 bg-secondary rounded-md mt-10 border border-line relative">
+        {/* {isFetchings && !isLoading && <FetchingSpinner />} */}
         <div className="table-wrapper custom-scroll">
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Status</th>
-                <th>Developer Name</th>
-                <th>Email</th>
-                <th></th>
+                <th>Title</th>
                 <th></th>
               </tr>
             </thead>
@@ -159,20 +166,19 @@ const DeveloperList = ({ setItemEdit }) => {
                       <tr key={key} className="group relative cursor-pointer">
                         <td className="text-center">{counter++}.</td>
                         <td>
-                          {item.user_developer_is_active ? (
+                          {item.category_is_active ? (
                             <Status text={"Active"} />
                           ) : (
                             <Status text={"Inactive"} />
                           )}
                         </td>
-                        <td>{`${item.user_developer_first_name} ${item.user_developer_last_name}`}</td>
-                        <td>{item.user_developer_email}</td>
+                        <td>{item.category_title}</td>
                         <td
                           colSpan="100%"
                           className="opacity-0 group-hover:opacity-100"
                         >
                           <div className="flex items-center justify-end gap-3 mr-4">
-                            {item.user_developer_is_active == 1 ? (
+                            {item.category_is_active == 1 ? (
                               <>
                                 <button
                                   type="button"
@@ -226,7 +232,7 @@ const DeveloperList = ({ setItemEdit }) => {
           </table>
 
           <div className="pb-10 text-center flex items-center ">
-            <LoadMore
+            <Loadmore
               fetchNextPage={fetchNextPage}
               isFetchingNextPage={isFetchingNextPage}
               hasNextPage={hasNextPage}
@@ -237,33 +243,31 @@ const DeveloperList = ({ setItemEdit }) => {
             />
           </div>
         </div>
-        {store.isDelete && (
-          <ModalDelete
-            setIsDelete={setIsDelete}
-            mysqlApiDelete={`/v2/developer/${id}`}
-            queryKey={"developer"}
-            item={dataItem.developer_name}
-          />
-        )}
-        {store.isArchive && (
-          <ModalArchive
-            setIsArchive={setIsArchive}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-        {store.isRestore && (
-          <ModalRestore
-            setIsRestore={setIsRestore}
-            mysqlEndpoint={`/v2/developer/active/${id}`}
-            queryKey={"developer"}
-          />
-        )}
-
-        {store.isConfirm && <ModalConfirm />}
       </div>
+
+      {store.isDelete && (
+        <ModalDelete
+          setIsDelete={setIsDelete}
+          mysqlApiDelete={`/v2/category/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isArchive && (
+        <ModalArchive
+          setIsArchive={setIsArchive}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
+      {store.isRestore && (
+        <ModalRestore
+          setIsRestore={setIsRestore}
+          mysqlEndpoint={`/v2/category/active/${id}`}
+          queryKey={"category"}
+        />
+      )}
     </>
   );
 };
 
-export default DeveloperList;
+export default CategoryTable;
